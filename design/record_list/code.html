@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Field Ethos - Linguistic Archive</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#47645e",
+                    "on-tertiary-fixed-variant": "#404942",
+                    "on-primary-container": "#76978d",
+                    "primary": "#001813",
+                    "on-primary": "#ffffff",
+                    "outline-variant": "#c1c8c4",
+                    "surface-dim": "#dbdad9",
+                    "primary-fixed": "#c7eadf",
+                    "on-error-container": "#93000a",
+                    "tertiary-fixed-dim": "#bfc9c0",
+                    "tertiary-fixed": "#dbe5dc",
+                    "surface-container-high": "#e9e8e7",
+                    "primary-fixed-dim": "#abcec3",
+                    "on-primary-fixed-variant": "#2d4d45",
+                    "secondary-fixed": "#c9e9e1",
+                    "primary-container": "#0d2e27",
+                    "on-secondary": "#ffffff",
+                    "surface-container-low": "#f5f3f3",
+                    "on-error": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "surface-variant": "#e4e2e2",
+                    "tertiary-container": "#222b25",
+                    "surface-container": "#efeded",
+                    "surface-bright": "#fbf9f8",
+                    "inverse-surface": "#303030",
+                    "surface": "#fbf9f8",
+                    "on-surface-variant": "#414846",
+                    "on-primary-fixed": "#00201a",
+                    "inverse-on-surface": "#f2f0f0",
+                    "on-secondary-container": "#4d6a64",
+                    "on-tertiary-fixed": "#151d18",
+                    "on-tertiary": "#ffffff",
+                    "tertiary": "#0e1611",
+                    "surface-tint": "#45655c",
+                    "surface-container-highest": "#e4e2e2",
+                    "error": "#ba1a1a",
+                    "on-tertiary-container": "#89928b",
+                    "surface-container-lowest": "#ffffff",
+                    "on-surface": "#1b1c1c",
+                    "on-background": "#1b1c1c",
+                    "secondary-container": "#c9e9e1",
+                    "on-secondary-fixed-variant": "#2f4c47",
+                    "secondary-fixed-dim": "#aecdc6",
+                    "outline": "#717976",
+                    "on-secondary-fixed": "#02201c",
+                    "background": "#fbf9f8",
+                    "inverse-primary": "#abcec3"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "unit": "4px",
+                    "margin-edge": "40px",
+                    "stack-sm": "8px",
+                    "stack-lg": "32px",
+                    "stack-md": "16px",
+                    "container-max": "1440px"
+            },
+            "fontFamily": {
+                    "label-md": ["JetBrains Mono"],
+                    "label-sm": ["JetBrains Mono"],
+                    "headline-md": ["Hanken Grotesk"],
+                    "headline-lg": ["Hanken Grotesk"],
+                    "body-lg": ["Hanken Grotesk"],
+                    "title-lg": ["Hanken Grotesk"],
+                    "display-lg": ["Hanken Grotesk"],
+                    "body-md": ["Hanken Grotesk"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Hanken Grotesk', sans-serif;
+            background-color: #fbf9f8;
+            color: #1b1c1c;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #c1c8c4;
+            border-radius: 10px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface-dim border-b border-outline-variant dark:border-on-tertiary-fixed-variant w-full top-0 sticky z-50 flex items-center justify-between px-gutter h-16">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional portrait of a linguistic researcher in an office filled with books and antique maps. The lighting is soft and natural, coming from a side window. The overall aesthetic is academic, calm, and focused, using a muted color palette of sage green and ivory to match the brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBJnTrdWM1nPv1ibYDf_MHJacUzEtei2Vr-D10i0_z3m5pBkG4JflgiQ6l_diGfSGTU3BR6Lquxjt13doFtGXuRvcSC7Jyxk8p0kxMnLO5bDK059LnC7filtIyrPdhhI42GBf2g2Oa5evytg5oRAlqVYzy2fc1ueO-w9N49_aXdkVkZ489gc1vGdtOYuGualSDlkJkyQ-J1zudKjmJeCkY5G121gIcIMxLPd7vRVK5w4iHsyJHIXSIronYKzSArYuJu0IZKbBwLLU"/>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary dark:text-primary-fixed">Field Ethos</h1>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 rounded-full hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-colors active:opacity-80">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed">sync</span>
+</button>
+</div>
+</header>
+<main class="max-w-container-max mx-auto px-gutter py-stack-md">
+<!-- Sync Status Card -->
+<div class="mb-stack-lg animate-fade-in">
+<div class="bg-surface-container-low border border-outline-variant p-stack-md rounded-xl flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="bg-secondary-container p-3 rounded-full">
+<span class="material-symbols-outlined text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">cloud_done</span>
+</div>
+<div>
+<h2 class="font-title-lg text-title-lg text-primary">Archive Synchronized</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Last updated 2 minutes ago</p>
+</div>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-full font-label-md text-label-md flex items-center gap-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[18px]">sync</span>
+                    Sync Now
+                </button>
+</div>
+</div>
+<!-- Filter Chips (High-end UI Pattern) -->
+<div class="flex gap-2 mb-stack-md overflow-x-auto pb-2 custom-scrollbar">
+<button class="px-4 py-1.5 rounded-full bg-primary text-on-primary font-label-md text-label-md whitespace-nowrap">All Records</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-md text-label-md whitespace-nowrap hover:bg-surface-variant transition-colors border border-outline-variant">Myths</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-md text-label-md whitespace-nowrap hover:bg-surface-variant transition-colors border border-outline-variant">Rituals</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-md text-label-md whitespace-nowrap hover:bg-surface-variant transition-colors border border-outline-variant">Phonetics</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-md text-label-md whitespace-nowrap hover:bg-surface-variant transition-colors border border-outline-variant">Oral Histories</button>
+</div>
+<!-- Bento Grid / Asymmetric List Layout -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Record Card 1 (Large Featured) -->
+<div class="md:col-span-2 group cursor-pointer bg-white border border-outline-variant rounded-xl overflow-hidden hover:shadow-sm transition-all duration-300">
+<div class="flex flex-col md:flex-row h-full">
+<div class="md:w-1/2 h-64 md:h-auto relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A macro photograph of an ancient, weathered manuscript page with intricate handwritten script in a fading dark ink. The texture of the parchment is tactile and visible. The background is softly blurred, focusing on the rhythmic nature of the script. Earthy tones of sepia and charcoal dominate the frame." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAl8Swo7Fi2G-9gttJfIQvFN4eRGP_dzeqGMBK9L0-lcUrn4Cd_-_Q5Uh6lMj-3C2DNyYUe0PJEJaHznKTsJo-uhUbZMzjzIWh2RD0nUhiAsf1cr2RUhh9OI9Ku_YY5eXFFAALWAEvyl4_KKi7w9i4T8K_2QCILalBrydqtUKBn6Av6lB41JC1SggVrKOEdFTf0kPzQCpVMPfjNDznYci4ymGdOJwlBxkj-6XvWL-QStO9FSNBdkJh3bK9n7okTj7xB8JD3t5Ss4z0"/>
+<div class="absolute top-4 left-4">
+<span class="bg-primary px-3 py-1 text-on-primary font-label-sm text-label-sm rounded-full">MYTH</span>
+</div>
+</div>
+<div class="p-stack-lg flex flex-col justify-between md:w-1/2">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-2">OCTOBER 14, 2023</p>
+<h3 class="font-headline-md text-headline-md text-primary mb-4 leading-tight">The Origin of the Mountain Winds (Vocal Recording)</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-3">A detailed narration of the cardinal spirits and their role in the creation myth of the Southern Valley. Speaker: Elder Elena Kato.</p>
+</div>
+<div class="mt-6 flex items-center justify-between border-t border-outline-variant pt-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">mic</span>
+<span class="font-label-md text-label-md text-secondary">Audio Archive</span>
+</div>
+<span class="material-symbols-outlined text-outline">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Record Card 2 -->
+<div class="group cursor-pointer bg-white border border-outline-variant rounded-xl overflow-hidden hover:shadow-sm transition-all duration-300 flex flex-col">
+<div class="h-48 relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A wide angle shot of a traditional communal ritual gathering at sunset. Silhouetted figures are grouped around a central hearth fire. The sky is a deep indigo and burnt orange. The mood is solemn and respectful, capturing a moment of cultural continuity in a rural landscape." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCo7I6kIBrYjeDOsPDs5lR5XcgvmE84NKYhicx2KDNzP1DtsIctMEb_MhV2revAujqxNrcF-MEZrAd6H7VDVBXUxiz14_0wMjwUpEoSHADg1ggz5bIvDUNrAR41zK5PV8OgY9-mtVIchL-k8Amosh9PtGtd5hXuVof4eDomx13YQ5z3EDA1_8kHmuju5rJtwyOgA-V8u9FxJGxhh_CSaaE2mhArXkD7KX_3EliTfd6_HIAKPLxeyShFFc_seUO8xj7BkfgOitfnWx8"/>
+<div class="absolute top-4 left-4">
+<span class="bg-secondary px-3 py-1 text-on-primary font-label-sm text-label-sm rounded-full">RITUAL</span>
+</div>
+</div>
+<div class="p-stack-md flex-1 flex flex-col justify-between">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-2">OCTOBER 12, 2023</p>
+<h3 class="font-title-lg text-title-lg text-primary mb-2">Harvest Invocations: Transcription Notes</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Field notes documenting the specific phonetic variations used during the harvest chants.</p>
+</div>
+<div class="mt-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">description</span>
+<span class="font-label-md text-label-md text-secondary">Text Document</span>
+</div>
+</div>
+</div>
+<!-- Record Card 3 -->
+<div class="group cursor-pointer bg-white border border-outline-variant rounded-xl overflow-hidden hover:shadow-sm transition-all duration-300 flex flex-col">
+<div class="p-stack-md flex-1 flex flex-col justify-between">
+<div class="mb-4">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-3 py-1 font-label-sm text-label-sm rounded-full">PHONETICS</span>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-2">OCTOBER 09, 2023</p>
+<h3 class="font-title-lg text-title-lg text-primary mb-2">Glottal Stop Variations in Highland Dialect</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-3">Comparative analysis of glottal stop frequency between speakers under 30 and over 60 years old in the Northern Ridge settlement.</p>
+</div>
+<div class="mt-4 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">equalizer</span>
+<span class="font-label-md text-label-md text-secondary">Data Set</span>
+</div>
+<span class="material-symbols-outlined text-outline">more_vert</span>
+</div>
+</div>
+</div>
+<!-- Record Card 4 (Horizontal Small) -->
+<div class="lg:col-span-2 group cursor-pointer bg-white border border-outline-variant rounded-xl overflow-hidden hover:shadow-sm transition-all duration-300">
+<div class="flex items-center p-stack-md gap-6">
+<div class="w-32 h-32 flex-shrink-0 rounded-lg overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Close-up of a weathered, wooden mask with intricate carvings and faded pigment. The mask is displayed on a neutral, soft grey background. The lighting highlights the deep textures of the wood and the subtle remaining colors, reflecting artistic heritage and meticulous preservation." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEbYIPqgy9Z3omd6a4giJjmUuPFGEc5knEt9zKkSASBfDRD_JSoxTRyBLpEyfqq64lkcmlR-_uAcG4FJ8VSqtMKxOp2HftShpRssWZOfItKoRoViOyhoSaS3eGX2oVUYHaN_pPzzuC8dXjvuzvofSFZ8OdhDgh0GHd01a48rac1FXjGVFJhe-DnZMbCVLNMMxrpf0_FGNmwmTaMeM1_wPmHUiDks4nnAql_hANyyezYIFd06tUeFXeGLSc6WmAK-VywMKj7KbRQ9w"/>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-2">
+<span class="bg-surface-container-highest text-on-surface-variant px-2 py-0.5 font-label-sm text-label-sm rounded-full">ARTIFACT</span>
+<p class="font-label-sm text-label-sm text-on-surface-variant">OCTOBER 05, 2023</p>
+</div>
+<h3 class="font-title-lg text-title-lg text-primary mb-1">Mask of the Silent Guardian: Etymology</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-1">Tracing the root words of the guardian's ceremonial name across three neighboring villages.</p>
+<div class="mt-2 flex items-center gap-4">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-secondary">photo_library</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">8 Photos</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-secondary">attachment</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">2 Files</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Record Card 5 -->
+<div class="group cursor-pointer bg-white border border-outline-variant rounded-xl overflow-hidden hover:shadow-sm transition-all duration-300 flex flex-col">
+<div class="h-48 relative overflow-hidden bg-surface-container">
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-outline-variant text-6xl">audiotrack</span>
+</div>
+<div class="absolute top-4 left-4">
+<span class="bg-primary px-3 py-1 text-on-primary font-label-sm text-label-sm rounded-full">ORAL HISTORY</span>
+</div>
+</div>
+<div class="p-stack-md flex-1 flex flex-col justify-between">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-2">SEPTEMBER 28, 2023</p>
+<h3 class="font-title-lg text-title-lg text-primary mb-2">The Great Migration (Part III)</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Continuity of the migration narrative focusing on the river crossing period.</p>
+</div>
+<div class="mt-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">mic</span>
+<span class="font-label-md text-label-md text-secondary">In Transcription</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB -->
+<button class="fixed bottom-24 right-gutter w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-40 group">
+<span class="material-symbols-outlined text-3xl group-hover:rotate-90 transition-transform duration-300">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface dark:bg-surface-dim border-t border-outline-variant shadow-sm h-16">
+<a class="flex flex-col items-center justify-center bg-secondary-container dark:bg-primary-container text-on-secondary-container dark:text-on-primary-container rounded-full px-4 py-1 hover:bg-surface-container-highest dark:hover:bg-tertiary-container transition-all active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">folder_open</span>
+<span class="font-label-md text-label-md">Archive</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-tertiary-fixed-variant px-4 py-1 hover:bg-surface-container-highest dark:hover:bg-tertiary-container transition-all active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">cloud_upload</span>
+<span class="font-label-md text-label-md">Uploads</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-tertiary-fixed-variant px-4 py-1 hover:bg-surface-container-highest dark:hover:bg-tertiary-container transition-all active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for the Sync button
+        const syncBtn = document.querySelector('button:contains("Sync Now")');
+        if (syncBtn) {
+            syncBtn.addEventListener('click', function() {
+                const icon = this.querySelector('.material-symbols-outlined');
+                icon.classList.add('animate-spin');
+                setTimeout(() => {
+                    icon.classList.remove('animate-spin');
+                }, 2000);
+            });
+        }
+
+        // Search/Filter functionality (simulated)
+        const filterChips = document.querySelectorAll('button.whitespace-nowrap');
+        filterChips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                filterChips.forEach(c => {
+                    c.classList.remove('bg-primary', 'text-on-primary');
+                    c.classList.add('bg-surface-container-high', 'text-on-surface-variant');
+                });
+                chip.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+                chip.classList.add('bg-primary', 'text-on-primary');
+            });
+        });
+    </script>
+</body></html>

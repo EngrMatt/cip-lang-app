@@ -1,0 +1,26 @@
+schema: spec-driven
+
+context: |
+  Project: cip-lang-app — Flutter 純前端田野語料收集 App（iOS + Android）
+  Spec source: docs/mvp.md | API spec: docs/api.md | Design: design/ (Field Ethos)
+  Architecture: pure frontend client; all data via REST API to external backend
+  API base URL (dev): http://localhost:8280 (Android emulator: http://10.0.2.2:8280)
+  Available API: GET /records, GET /records/{id}, PUT /records/{id}, DELETE /records/{id}
+  Pending API: POST /records, POST /upload/audio, POST /upload/image (implement client, graceful fallback)
+
+  Tech stack: Flutter 3.x, Dart, Riverpod, Dio, go_router, record, just_audio, image_picker
+  MVP: record list, create wizard, audio record/playback (required), camera, upload
+  Design system: Field Ethos — primary #001813, surface #fbf9f8, Hanken Grotesk style
+  Out of scope: auth, GPS, offline sync, AI, backend code in this repo
+
+  Conventions: feature-first lib/, Riverpod, repository layer for API, 繁體中文 UI
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always include a "Non-goals" section
+#     tasks:
+#       - Break tasks into chunks of max 2 hours

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Field Ethos - Record Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#47645e",
+                    "on-tertiary-fixed-variant": "#404942",
+                    "on-primary-container": "#76978d",
+                    "primary": "#001813",
+                    "on-primary": "#ffffff",
+                    "outline-variant": "#c1c8c4",
+                    "surface-dim": "#dbdad9",
+                    "primary-fixed": "#c7eadf",
+                    "on-error-container": "#93000a",
+                    "tertiary-fixed-dim": "#bfc9c0",
+                    "tertiary-fixed": "#dbe5dc",
+                    "surface-container-high": "#e9e8e7",
+                    "primary-fixed-dim": "#abcec3",
+                    "on-primary-fixed-variant": "#2d4d45",
+                    "secondary-fixed": "#c9e9e1",
+                    "primary-container": "#0d2e27",
+                    "on-secondary": "#ffffff",
+                    "surface-container-low": "#f5f3f3",
+                    "on-error": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "surface-variant": "#e4e2e2",
+                    "tertiary-container": "#222b25",
+                    "surface-container": "#efeded",
+                    "surface-bright": "#fbf9f8",
+                    "inverse-surface": "#303030",
+                    "surface": "#fbf9f8",
+                    "on-surface-variant": "#414846",
+                    "on-primary-fixed": "#00201a",
+                    "inverse-on-surface": "#f2f0f0",
+                    "on-secondary-container": "#4d6a64",
+                    "on-tertiary-fixed": "#151d18",
+                    "on-tertiary": "#ffffff",
+                    "tertiary": "#0e1611",
+                    "surface-tint": "#45655c",
+                    "surface-container-highest": "#e4e2e2",
+                    "error": "#ba1a1a",
+                    "on-tertiary-container": "#89928b",
+                    "surface-container-lowest": "#ffffff",
+                    "on-surface": "#1b1c1c",
+                    "on-background": "#1b1c1c",
+                    "secondary-container": "#c9e9e1",
+                    "on-secondary-fixed-variant": "#2f4c47",
+                    "secondary-fixed-dim": "#aecdc6",
+                    "outline": "#717976",
+                    "on-secondary-fixed": "#02201c",
+                    "background": "#fbf9f8",
+                    "inverse-primary": "#abcec3"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "unit": "4px",
+                    "margin-edge": "40px",
+                    "stack-sm": "8px",
+                    "stack-lg": "32px",
+                    "stack-md": "16px",
+                    "container-max": "1440px"
+            },
+            "fontFamily": {
+                    "label-md": ["JetBrains Mono"],
+                    "label-sm": ["JetBrains Mono"],
+                    "headline-md": ["Hanken Grotesk"],
+                    "headline-lg": ["Hanken Grotesk"],
+                    "body-lg": ["Hanken Grotesk"],
+                    "title-lg": ["Hanken Grotesk"],
+                    "display-lg": ["Hanken Grotesk"],
+                    "body-md": ["Hanken Grotesk"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fbf9f8;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c1c8c4;
+            border-radius: 10px;
+        }
+        .custom-blur {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md overflow-x-hidden pb-24">
+<!-- Top AppBar (JSON Source of Truth) -->
+<header class="fixed top-0 w-full z-50 bg-surface dark:bg-surface-dim border-b border-outline-variant dark:border-on-tertiary-fixed-variant flex items-center justify-between px-gutter h-16">
+<div class="flex items-center gap-4">
+<button class="p-2 -ml-2 active:opacity-80 transition-opacity rounded-full hover:bg-surface-container-low" onclick="window.history.back()">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="font-headline-lg text-headline-lg text-primary dark:text-primary-fixed">Field Ethos</h1>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed">sync</span>
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a linguistic researcher in a neutral studio setting with soft side lighting, reflecting an academic and reliable persona. The background is a muted warm gray, aligning with the earthy and grounded aesthetic of the Field Ethos platform. High detail and realistic textures." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkpvEV4FG92Gj1QKjkW-_ahtAZFFL_fDspKvP028WR_uX58i2ppRy4loXTVlfZYRqBXnDBIns7cPZwUFHcLSmHGvXkMQt0eOPGj3ypdXnpHTeEdcdYnK9_bYzZIsT6mhLB-KzIrIGlxNatialgBsIABCuiywOir7NTjYUHeZ9OsaZQfBgQJxFmqP1Y5_xaTxoGygbKzbtBH-O1CUQeTpgOTvehX2I91e3LnQwY1FG4MfamaZXPigBS7z_WskPxxeiVixHNGVh6UO4"/>
+</div>
+</div>
+</header>
+<main class="mt-20 px-gutter space-y-stack-lg">
+<!-- Status & Title Section -->
+<section class="space-y-unit">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase text-secondary tracking-widest mb-1">Entry ID: LE-2940</span>
+<h2 class="font-headline-md text-headline-md text-primary leading-tight">Southern Dialectical Variations: Morphological Shift</h2>
+</div>
+<!-- Status Badge -->
+<div class="bg-secondary text-on-primary px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-md text-label-md">Uploaded</span>
+</div>
+</div>
+</section>
+<!-- Metadata Section (Bento Style) -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+<!-- Metadata Card -->
+<div class="bg-surface-container-lowest border border-outline-variant p-stack-md rounded-lg space-y-4">
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-1">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Type</p>
+<p class="font-title-lg text-title-lg text-on-surface">Oral History</p>
+</div>
+<div class="space-y-1">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Date</p>
+<p class="font-title-lg text-title-lg text-on-surface">Oct 24, 2023</p>
+</div>
+</div>
+<div class="pt-4 border-t border-outline-variant space-y-2">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Notes</p>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+                        Transcription involves specific archaic tense markers noted in the elder speakers of the Oakhaven valley. Emphasis on the shift from 'v' to 'f' in terminal positions. Researcher noted significant emotional resonance during the recounting of the 1954 flood event.
+                    </p>
+</div>
+</div>
+<!-- Audio Player Card -->
+<div class="bg-primary-container text-on-primary-fixed-variant p-stack-md rounded-lg flex flex-col justify-between shadow-sm relative overflow-hidden">
+<div class="relative z-10">
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">graphic_eq</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-primary-fixed">Primary Recording</p>
+<p class="font-label-sm text-label-sm opacity-70">Lossless WAV • 48kHz</p>
+</div>
+</div>
+<span class="font-label-md text-label-md">12:45</span>
+</div>
+<!-- Waveform Mockup -->
+<div class="h-16 flex items-end gap-[2px] mb-6">
+<div class="w-1 bg-primary-fixed h-[40%] rounded-full"></div>
+<div class="w-1 bg-primary-fixed h-[60%] rounded-full"></div>
+<div class="w-1 bg-primary-fixed h-[30%] rounded-full"></div>
+<div class="w-1 bg-primary-fixed h-[70%] rounded-full"></div>
+<div class="w-1 bg-primary-fixed h-[90%] rounded-full"></div>
+<div class="w-1 bg-primary-fixed h-[50%] rounded-full"></div>
+<div class="w-1 bg-secondary-fixed h-[60%] rounded-full"></div>
+<div class="w-1 bg-secondary-fixed h-[80%] rounded-full"></div>
+<div class="w-1 bg-secondary-fixed h-[40%] rounded-full"></div>
+<div class="w-1 bg-secondary-fixed h-[30%] rounded-full"></div>
+<div class="w-1 bg-secondary-fixed h-[60%] rounded-full"></div>
+<div class="w-1 bg-secondary-fixed h-[70%] rounded-full"></div>
+<div class="w-1 bg-secondary-fixed h-[20%] rounded-full"></div>
+<div class="w-1 bg-secondary-fixed h-[40%] rounded-full"></div>
+<div class="w-1 bg-secondary-fixed h-[80%] rounded-full"></div>
+<div class="w-1 bg-secondary-fixed h-[55%] rounded-full"></div>
+<div class="w-1 bg-secondary-fixed h-[35%] rounded-full"></div>
+<div class="w-1 bg-secondary-fixed h-[45%] rounded-full"></div>
+</div>
+<div class="flex items-center justify-center gap-8">
+<button class="material-symbols-outlined text-secondary-fixed active:scale-90 transition-transform">replay_10</button>
+<button class="w-14 h-14 rounded-full bg-secondary-fixed text-primary flex items-center justify-center shadow-lg active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<button class="material-symbols-outlined text-secondary-fixed active:scale-90 transition-transform">forward_10</button>
+</div>
+</div>
+<!-- Decorative Subtle BG Pattern -->
+<div class="absolute right-0 top-0 opacity-10 pointer-events-none transform translate-x-1/4 -translate-y-1/4">
+<span class="material-symbols-outlined text-[160px]">record_voice_over</span>
+</div>
+</div>
+</section>
+<!-- Photo Gallery Section -->
+<section class="space-y-stack-sm">
+<div class="flex items-center justify-between">
+<h3 class="font-title-lg text-title-lg text-primary flex items-center gap-2">
+<span class="material-symbols-outlined">collections</span>
+                    Field Documentation
+                </h3>
+<span class="font-label-md text-label-md text-on-surface-variant">4 Photos</span>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="aspect-square rounded-lg overflow-hidden border border-outline-variant group cursor-pointer relative" onclick="openGallery(0)">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A close-up high-resolution photograph of weathered, handwritten field notes on aged parchment. The ink is slightly faded but legible, showcasing linguistic transcriptions and phonetic symbols. The lighting is warm and directional, highlighting the tactile texture of the paper and the meticulous nature of academic fieldwork." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-J1xHbznUwKc21XbPS7OZ57acYPpW81147q50eS38axGofkre8fwdvnz6TifJ_FN0B0UBNhE7bL8u1FT7eazJIrsFpNTAv1EyFu33JJYIWLu5WSlIqfhX1ZfggiTeEe9_ejTDPaTv1jdYRvII0ZKmZgNhssUM2-JSJ9URzVj_H863oyj76jxuHkF-I-7tr-Xw3wPumG3UjyIcJ0Xaqh4jBTv_Ga0ENja9P6h9McPaS_o57ABpkKJe4kc2AubCIGBp8yYn3KZx14k"/>
+<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined text-white">fullscreen</span>
+</div>
+</div>
+<div class="aspect-square rounded-lg overflow-hidden border border-outline-variant group cursor-pointer relative" onclick="openGallery(1)">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A wide-angle landscape photograph of a remote valley at dawn, characterized by a soft morning mist clinging to earthy green hills. The atmosphere is serene and grounded, reflecting the quiet focus of a researcher's environment. The palette is dominated by muted sages, warm ochres, and a pale sky, consistent with a professional, academic aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDF9DGSQb4V06Fd1g3-G_EMi-4kKTE5QZKgnN3xWGTVK-XmzMeI-u1DwUZK0URufDBG6VVGrqwx-5W3qXkjKfJ7jrABW3O7MM4VBHT103ZntByM-3Iqy_4TX_MrgHP32CSQY4HlOEejE331HESBaPfPhdtX4W9KYluRnfrnZ9cNWsgVXVX70Vh8gdBp_KyNJbQiO_byZpiRTRPJTiUbXh3JliuaYOSB-A6ih49DMMQ0YMvnJQIhWZxEt4xzQZhnFa-zGcIKXiLj71o"/>
+<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined text-white">fullscreen</span>
+</div>
+</div>
+<div class="aspect-square rounded-lg overflow-hidden border border-outline-variant group cursor-pointer relative" onclick="openGallery(2)">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A photograph of vintage high-end recording equipment resting on a wooden table. A microphone with a silver mesh sits beside a pair of leather-padded headphones. The lighting is moody and focused, emphasizing a blend of old-world craftsmanship and modern precision. The scene is shot in a shallow depth of field, blurring out the academic library background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZUGWH_Url1KPe5wFFEiiApIx6lBO8FYzjmhZCvWKu-jiRMIPSZK0o_vw_BJV9Rse8kND1Nobvg7-gWhB8ADzsRb3zKrRijh8iH043dWqiKK5S5uZppaxOSCmm7kkidG0kcgrLxRijngIo-pHPvQ7rSW6CSsjaGEXfAkwH0SBwrVE0Slv_xs9CeHw5MSFmEa8Uj138dMID_eN34VHJRTQpcW0eE3oqM5vrYY_ONNM3LU3JN2qFPX4ie64S3JX8I3-p1MzsVdWzCPw"/>
+<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined text-white">fullscreen</span>
+</div>
+</div>
+<div class="aspect-square rounded-lg overflow-hidden border border-outline-variant group cursor-pointer relative" onclick="openGallery(3)">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="An intimate portrait of an elderly community speaker in natural light, sitting against a stone wall. The subject's face is weathered, conveying a sense of history and cultural preservation. The focus is sharp on their expressive eyes and hands, capturing a moment of storytelling. The colors are rich but natural, maintaining a respectful and rooted documentary style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXFwEsQMF2ezPGHqnyWjUPNfcoOHwynMYVLR26HVMdocMxbw_fnZi68QoxpluW1FY0379OS5AhOeLjQyIeJCZb2IEz_7D3_gfUZBrt_biVVrMw9dQgAzFMt3cn0HZ1_JNTtT3Vy43wdhunuZIDn7kGuu5TJOYvustwW5J4DlPAaTr-BFasqjnvbriwE77HDZAq1kRMlroLmHfPTJoVsIDuBxiiI_rFdFcNKuPx5QUzDwheEJ9VWUzoEJqnvd-lqOTYql_BgQaeLlM"/>
+<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined text-white">fullscreen</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Transcription Preview (Extra Value Add) -->
+<section class="bg-surface-container-low p-stack-md rounded-lg border border-outline-variant border-dashed">
+<h3 class="font-label-sm text-label-sm uppercase text-on-surface-variant mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">segment</span>
+                Initial Transcript Preview
+            </h3>
+<div class="space-y-3">
+<div class="flex gap-4">
+<span class="font-label-sm text-label-sm text-secondary w-12 flex-shrink-0">00:04</span>
+<p class="font-body-md text-body-md italic text-on-surface">"And so the waters rose... but they didn't just come, they flowed like a memory we'd forgotten."</p>
+</div>
+<div class="flex gap-4">
+<span class="font-label-sm text-label-sm text-secondary w-12 flex-shrink-0">00:12</span>
+<p class="font-body-md text-body-md italic text-on-surface">"The word 'valley' back then, we said it different, more of a 'v-f' sound at the end."</p>
+</div>
+</div>
+<button class="mt-6 w-full py-3 bg-secondary text-on-primary font-label-md text-label-md rounded-lg active:scale-[0.98] transition-transform">Edit Full Transcript</button>
+</section>
+</main>
+<!-- Bottom NavBar (JSON Source of Truth) -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface dark:bg-surface-dim border-t border-outline-variant shadow-sm rounded-t-full">
+<!-- Archive Tab (Active because we are looking at a record archive item) -->
+<a class="flex flex-col items-center justify-center bg-secondary-container dark:bg-primary-container text-on-secondary-container dark:text-on-primary-container rounded-full px-4 py-1 hover:bg-surface-container-highest dark:hover:bg-tertiary-container transition-all active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">folder_open</span>
+<span class="font-label-md text-label-md">Archive</span>
+</a>
+<!-- Uploads Tab -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-tertiary-fixed-variant px-4 py-1 hover:bg-surface-container-highest dark:hover:bg-tertiary-container transition-all active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">cloud_upload</span>
+<span class="font-label-md text-label-md">Uploads</span>
+</a>
+<!-- Settings Tab -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-tertiary-fixed-variant px-4 py-1 hover:bg-surface-container-highest dark:hover:bg-tertiary-container transition-all active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<!-- Lightbox/Gallery Modal (Hidden by default) -->
+<div class="fixed inset-0 z-[100] bg-primary/90 hidden flex-col items-center justify-center p-gutter custom-blur opacity-0 transition-opacity duration-300" id="gallery-modal">
+<button class="absolute top-6 right-6 text-white p-2 hover:bg-white/10 rounded-full" onclick="closeGallery()">
+<span class="material-symbols-outlined text-[32px]">close</span>
+</button>
+<div class="max-w-4xl w-full h-[618px] flex items-center justify-center">
+<img class="max-w-full max-h-full object-contain shadow-2xl rounded-lg" data-alt="A large-scale high-fidelity viewing version of the selected documentation photograph. The image fills the frame, showcasing extreme detail and professional photographic quality. The aesthetic is consistent with the academic and grounded tone of the application, featuring natural textures and sophisticated lighting." id="modal-image" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmAIZx5jeBkfv6rXzNPtZINK_S7DMFMkKfsmzn9TEVV7GvVEfUNdBuedMDeIQphgOMCjvMmIBT6OTq9rYKS6HxohKTiCOJJNPJ95nzYJsanFEQZOTqHz2UcAfmsrSn4Dt4MOmUcnwvriMW7dt9HzEzhIkCeJCQ7zFPuXZpxcBEBVwyZ-rfMFt3RzgnWrRuSKuqo9I3bJ7SmUw5V242vB9COQOryow_GnxdfemJJ_a6sCn7yVsYm8ewdCkCoMO-FxppF9p-bKg85g0"/>
+</div>
+<div class="mt-8 flex gap-4">
+<button class="p-3 bg-white/10 text-white rounded-full hover:bg-white/20" onclick="prevImg()">
+<span class="material-symbols-outlined">arrow_back_ios</span>
+</button>
+<button class="p-3 bg-white/10 text-white rounded-full hover:bg-white/20" onclick="nextImg()">
+<span class="material-symbols-outlined">arrow_forward_ios</span>
+</button>
+</div>
+</div>
+<script>
+        const galleryModal = document.getElementById('gallery-modal');
+        const modalImg = document.getElementById('modal-image');
+        let currentIdx = 0;
+
+        function openGallery(idx) {
+            currentIdx = idx;
+            galleryModal.classList.remove('hidden');
+            setTimeout(() => {
+                galleryModal.classList.add('flex');
+                galleryModal.classList.remove('opacity-0');
+                galleryModal.classList.add('opacity-100');
+            }, 10);
+            // In a real app, you'd change the src here.
+        }
+
+        function closeGallery() {
+            galleryModal.classList.add('opacity-0');
+            galleryModal.classList.remove('opacity-100');
+            setTimeout(() => {
+                galleryModal.classList.add('hidden');
+                galleryModal.classList.remove('flex');
+            }, 300);
+        }
+
+        function nextImg() {
+            currentIdx = (currentIdx + 1) % 4;
+            // logic to swap image source
+        }
+
+        function prevImg() {
+            currentIdx = (currentIdx - 1 + 4) % 4;
+            // logic to swap image source
+        }
+
+        // Micro-interaction for audio waveform
+        document.querySelectorAll('.rounded-full[class*="bg-"]').forEach(bar => {
+            bar.addEventListener('mouseover', () => {
+                bar.style.height = '100%';
+                bar.style.transition = 'height 0.2s ease-out';
+            });
+            bar.addEventListener('mouseleave', () => {
+                // Return to original state (approximated here)
+            });
+        });
+    </script>
+</body></html>
