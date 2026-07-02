@@ -29,17 +29,26 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
 
   Future<void> _togglePlay(String? url) async {
     if (url == null) return;
-    if (_isPlaying) {
-      await _player.pause();
-      setState(() => _isPlaying = false);
-    } else {
-      await _player.playUrl(url);
-      setState(() => _isPlaying = true);
-      _player.playerStateStream.listen((state) {
-        if (state.processingState == ProcessingState.completed && mounted) {
-          setState(() => _isPlaying = false);
-        }
-      });
+    try {
+      if (_isPlaying) {
+        await _player.pause();
+        setState(() => _isPlaying = false);
+      } else {
+        await _player.playUrl(url);
+        setState(() => _isPlaying = true);
+        _player.playerStateStream.listen((playerState) {
+          if (playerState.processingState == ProcessingState.completed &&
+              mounted) {
+            setState(() => _isPlaying = false);
+          }
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('播放失敗：$e')),
+        );
+      }
     }
   }
 

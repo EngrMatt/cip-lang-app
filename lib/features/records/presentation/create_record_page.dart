@@ -84,6 +84,23 @@ class CreateRecordPage extends ConsumerWidget {
                 style: TextStyle(color: Theme.of(context).colorScheme.error),
               ),
             ),
+          if (state.isUploading && state.uploadStatusLabel.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    state.uploadStatusLabel,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                  if (state.uploadProgress != null) ...[
+                    const SizedBox(height: 6),
+                    LinearProgressIndicator(value: state.uploadProgress),
+                  ],
+                ],
+              ),
+            ),
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(16),

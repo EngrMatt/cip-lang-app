@@ -8,18 +8,44 @@ final dioProvider = Provider<Dio>((ref) {
   final dio = Dio(
     BaseOptions(
       baseUrl: AppConfig.apiBaseUrl,
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 30),
-      headers: {'Content-Type': 'application/json'},
+      connectTimeout: const Duration(seconds: 15),
+      receiveTimeout: const Duration(seconds: 60),
+      sendTimeout: const Duration(seconds: 120),
+      validateStatus: (status) => status != null && status < 600,
     ),
   );
+
   dio.interceptors.add(
     InterceptorsWrapper(
-      onError: (error, handler) {
-        handler.next(error);
+      onRequest: (options, handler) {
+        // multipart 由 Dio 自動設定 boundary，不可帶 application/json
+        if (options.data is! FormData) {
+          options.headers.putIfAbsent(
+            'Content-Type',
+            () => 'application/json',
+          );
+        } else {
+          options.headers.remove('Content-Type');
+        }
+        handler.next(options);
+      },
+      onResponse: (response, handler) {
+        final code = response.statusCode ?? 0;
+        if (code >= 400) {
+          handler.reject(
+            DioException(
+              requestOptions: response.requestOptions,
+              response: response,
+              type: DioExceptionType.badResponse,
+            ),
+          );
+          return;
+        }
+        handler.next(response);
       },
     ),
   );
+
   return dio;
 });
 
@@ -47,6 +73,9 @@ AppException mapDioError(DioException error) {
         statusCode: status,
       );
     default:
+      if (status == 500) {
+        return AppException('伺服器錯誤，請確認後端與資料庫是否正常運行', statusCode: status);
+      }
       return AppException(
         error.message ?? '網路請求失敗',
         statusCode: status,

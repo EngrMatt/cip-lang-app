@@ -48,9 +48,22 @@ class RecordListPage extends ConsumerWidget {
             onRefresh: () => ref.read(recordsListProvider.notifier).refresh(),
             child: ListView.separated(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 88),
-              itemCount: response.items.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
+              itemCount: response.items.length +
+                  (response.items.length < response.total ? 1 : 0),
+              separatorBuilder: (_, index) => const SizedBox(height: 12),
               itemBuilder: (context, index) {
+                if (index >= response.items.length) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: OutlinedButton(
+                      onPressed: () =>
+                          ref.read(recordsListProvider.notifier).loadMore(),
+                      child: Text(
+                        '載入更多（${response.items.length}/${response.total}）',
+                      ),
+                    ),
+                  );
+                }
                 final record = response.items[index];
                 return Card(
                   child: InkWell(

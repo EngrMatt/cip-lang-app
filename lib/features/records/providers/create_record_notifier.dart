@@ -7,6 +7,8 @@ import 'records_providers.dart';
 
 enum CreateRecordStep { form, audio, photo, review }
 
+enum UploadPhase { idle, creating, uploadingAudio, uploadingImage, done }
+
 class CreateRecordState {
   const CreateRecordState({
     this.step = CreateRecordStep.form,
@@ -16,6 +18,8 @@ class CreateRecordState {
     this.audioPath,
     this.imagePath,
     this.isUploading = false,
+    this.uploadPhase = UploadPhase.idle,
+    this.uploadProgress,
     this.uploadError,
   });
 
@@ -26,6 +30,8 @@ class CreateRecordState {
   final String? audioPath;
   final String? imagePath;
   final bool isUploading;
+  final UploadPhase uploadPhase;
+  final double? uploadProgress;
   final String? uploadError;
 
   CreateRecordState copyWith({
@@ -38,6 +44,9 @@ class CreateRecordState {
     String? imagePath,
     bool clearImage = false,
     bool? isUploading,
+    UploadPhase? uploadPhase,
+    double? uploadProgress,
+    bool clearProgress = false,
     String? uploadError,
     bool clearError = false,
   }) {
@@ -49,9 +58,20 @@ class CreateRecordState {
       audioPath: clearAudio ? null : (audioPath ?? this.audioPath),
       imagePath: clearImage ? null : (imagePath ?? this.imagePath),
       isUploading: isUploading ?? this.isUploading,
+      uploadPhase: uploadPhase ?? this.uploadPhase,
+      uploadProgress:
+          clearProgress ? null : (uploadProgress ?? this.uploadProgress),
       uploadError: clearError ? null : (uploadError ?? this.uploadError),
     );
   }
+
+  String get uploadStatusLabel => switch (uploadPhase) {
+        UploadPhase.creating => '建立語料紀錄…',
+        UploadPhase.uploadingAudio => '上傳錄音…',
+        UploadPhase.uploadingImage => '上傳照片…',
+        UploadPhase.done => '完成',
+        UploadPhase.idle => '',
+      };
 }
 
 final createRecordProvider =
@@ -88,6 +108,7 @@ class CreateRecordNotifier extends Notifier<CreateRecordState> {
   void nextFromAudio() => goToStep(CreateRecordStep.photo);
   void nextFromPhoto() => goToStep(CreateRecordStep.review);
 
+  /// 依 docs/api.md：POST /records → POST /upload/audio → POST /upload/image（選填）
   Future<int?> submit() async {
     if (!validateForm()) {
       state = state.copyWith(uploadError: '請填寫標題與類型');
@@ -98,7 +119,12 @@ class CreateRecordNotifier extends Notifier<CreateRecordState> {
       return null;
     }
 
-    state = state.copyWith(isUploading: true, clearError: true);
+    state = state.copyWith(
+      isUploading: true,
+      clearError: true,
+      clearProgress: true,
+      uploadPhase: UploadPhase.creating,
+    );
     final repo = ref.read(recordRepositoryProvider);
 
     try {
@@ -108,32 +134,44 @@ class CreateRecordNotifier extends Notifier<CreateRecordState> {
         note: state.note.trim().isEmpty ? null : state.note.trim(),
       );
 
-      final audioUrl = await repo.uploadAudio(
+      state = state.copyWith(uploadPhase: UploadPhase.uploadingAudio);
+      await repo.uploadAudio(
         recordId: record.id,
         audioFile: File(state.audioPath!),
+        onProgress: (sent, total) {
+          if (total > 0) {
+            state = state.copyWith(uploadProgress: sent / total);
+          }
+        },
       );
 
-      String? imageUrl;
       if (state.imagePath != null) {
-        imageUrl = await repo.uploadImage(
+        state = state.copyWith(
+          uploadPhase: UploadPhase.uploadingImage,
+          clearProgress: true,
+        );
+        await repo.uploadImage(
           recordId: record.id,
           imageFile: File(state.imagePath!),
+          onProgress: (sent, total) {
+            if (total > 0) {
+              state = state.copyWith(uploadProgress: sent / total);
+            }
+          },
         );
       }
 
-      await repo.updateRecordUrls(
-        recordId: record.id,
-        audioUrl: audioUrl,
-        imageUrl: imageUrl,
-      );
-
       state = const CreateRecordState();
       ref.invalidate(recordsListProvider);
+      ref.invalidate(recordDetailProvider(record.id));
       return record.id;
     } catch (e) {
+      final message = e.toString().replaceFirst('AppException: ', '');
       state = state.copyWith(
         isUploading: false,
-        uploadError: e.toString().replaceFirst('AppException: ', ''),
+        uploadPhase: UploadPhase.idle,
+        clearProgress: true,
+        uploadError: message,
       );
       return null;
     }

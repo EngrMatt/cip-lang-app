@@ -1,17 +1,16 @@
-import 'dart:io';
-
 /// App 設定。API 規格見 docs/api.md
 class AppConfig {
   AppConfig._();
 
-  /// 可透過 `--dart-define=API_BASE_URL=http://192.168.x.x:8280` 覆寫（實機測試）
+  /// 測試環境 API（Swagger: https://cip-lang-test-20260624.nfs.tw/docs）
+  static const String defaultApiBaseUrl =
+      'https://cip-lang-test-20260624.nfs.tw';
+
+  /// 本地開發可覆寫：`flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8280`
   static const String _envApiBaseUrl = String.fromEnvironment('API_BASE_URL');
 
-  static String get apiBaseUrl {
-    if (_envApiBaseUrl.isNotEmpty) return _envApiBaseUrl;
-    if (Platform.isAndroid) return 'http://10.0.2.2:8280';
-    return 'http://localhost:8280';
-  }
+  static String get apiBaseUrl =>
+      _envApiBaseUrl.isNotEmpty ? _envApiBaseUrl : defaultApiBaseUrl;
 
   static const List<String> recordCategories = [
     '錄音',

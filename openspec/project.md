@@ -46,7 +46,7 @@
 
 ## 後端 API 整合
 
-API 規格見 **`docs/api.md`**（本地預設 `http://localhost:8280`）。
+API 規格見 **`docs/api.md`**（預設 `https://cip-lang-test-20260624.nfs.tw`）。
 
 | 方法 | 路徑 | 狀態 | 說明 |
 |------|------|------|------|

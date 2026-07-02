@@ -4,8 +4,9 @@
 
 | 項目 | 說明 |
 |------|------|
+| Base URL（測試環境） | `https://cip-lang-test-20260624.nfs.tw` |
 | Base URL（本地） | `http://localhost:8280` |
-| 互動文件（Swagger） | http://localhost:8280/docs |
+| 互動文件（Swagger） | https://cip-lang-test-20260624.nfs.tw/docs |
 | 認證 | MVP 階段無需認證 |
 | 資料格式 | JSON（上傳端點為 `multipart/form-data`） |
 
@@ -419,9 +420,10 @@ PUT /records/{id}      → 更新 URL（冗餘，上傳端點已寫入 DB）
 
 | 環境 | Base URL |
 |------|----------|
-| Android 模擬器 | `http://10.0.2.2:8280` |
-| iOS 模擬器 | `http://localhost:8280` |
-| 實機 | `http://<開發機 LAN IP>:8280` |
+| **測試環境（App 預設）** | `https://cip-lang-test-20260624.nfs.tw` |
+| Android 模擬器（本地） | `http://10.0.2.2:8280` |
+| iOS 模擬器（本地） | `http://localhost:8280` |
+| 實機（本地） | `http://<開發機 LAN IP>:8280` |
 
 App MVP 規格見 [flutter-mvp.md](./flutter-mvp.md)。
 

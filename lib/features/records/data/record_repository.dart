@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/errors/app_exception.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../models/record.dart';
 
@@ -16,14 +15,22 @@ class RecordRepository {
 
   final Dio _dio;
 
+  /// GET /records — docs/api.md
   Future<RecordListResponse> fetchRecords({
     int page = 1,
     int pageSize = 20,
+    String? search,
+    String? category,
   }) async {
     try {
       final response = await _dio.get<Map<String, dynamic>>(
         '/records',
-        queryParameters: {'page': page, 'page_size': pageSize},
+        queryParameters: {
+          'page': page,
+          'page_size': pageSize,
+          if (search != null && search.isNotEmpty) 'search': search,
+          if (category != null && category.isNotEmpty) 'category': category,
+        },
       );
       return RecordListResponse.fromJson(response.data!);
     } on DioException catch (e) {
@@ -31,6 +38,7 @@ class RecordRepository {
     }
   }
 
+  /// GET /records/{id}
   Future<Record> fetchRecord(int id) async {
     try {
       final response = await _dio.get<Map<String, dynamic>>('/records/$id');
@@ -40,7 +48,7 @@ class RecordRepository {
     }
   }
 
-  /// POST /records — 見 docs/api.md（後端尚未實作時會回傳 404/405）
+  /// POST /records → 201
   Future<Record> createRecord({
     required String title,
     required String category,
@@ -57,92 +65,74 @@ class RecordRepository {
       );
       return Record.fromJson(response.data!);
     } on DioException catch (e) {
-      if (e.response?.statusCode == 404 || e.response?.statusCode == 405) {
-        throw AppException(
-          '後端尚未提供 POST /records 端點，請先於後端實作新增語料 API',
-          statusCode: e.response?.statusCode,
-        );
-      }
       throw mapDioError(e);
     }
   }
 
-  /// POST /upload/audio — MVP 規格端點
+  /// POST /upload/audio — multipart，上傳後後端已寫入 audio_url
   Future<String> uploadAudio({
     required int recordId,
     required File audioFile,
+    void Function(int sent, int total)? onProgress,
   }) async {
     try {
+      final filename = _basename(audioFile.path, fallback: 'recording.m4a');
       final formData = FormData.fromMap({
-        'record_id': recordId,
+        'record_id': recordId.toString(),
         'file': await MultipartFile.fromFile(
           audioFile.path,
-          filename: 'recording.m4a',
+          filename: filename,
         ),
       });
       final response = await _dio.post<Map<String, dynamic>>(
         '/upload/audio',
         data: formData,
-        options: Options(contentType: 'multipart/form-data'),
+        onSendProgress: onProgress,
       );
       return response.data!['audio_url'] as String;
     } on DioException catch (e) {
-      if (e.response?.statusCode == 404 || e.response?.statusCode == 405) {
-        throw AppException(
-          '後端尚未提供 POST /upload/audio 端點',
-          statusCode: e.response?.statusCode,
-        );
-      }
       throw mapDioError(e);
     }
   }
 
-  /// POST /upload/image — MVP 規格端點
+  /// POST /upload/image — multipart，上傳後後端已寫入 image_url
   Future<String> uploadImage({
     required int recordId,
     required File imageFile,
+    void Function(int sent, int total)? onProgress,
   }) async {
     try {
+      final filename = _basename(imageFile.path, fallback: 'photo.jpg');
       final formData = FormData.fromMap({
-        'record_id': recordId,
+        'record_id': recordId.toString(),
         'file': await MultipartFile.fromFile(
           imageFile.path,
-          filename: 'photo.jpg',
+          filename: filename,
         ),
       });
       final response = await _dio.post<Map<String, dynamic>>(
         '/upload/image',
         data: formData,
-        options: Options(contentType: 'multipart/form-data'),
+        onSendProgress: onProgress,
       );
       return response.data!['image_url'] as String;
     } on DioException catch (e) {
-      if (e.response?.statusCode == 404 || e.response?.statusCode == 405) {
-        throw AppException(
-          '後端尚未提供 POST /upload/image 端點',
-          statusCode: e.response?.statusCode,
-        );
-      }
       throw mapDioError(e);
     }
   }
 
-  Future<Record> updateRecordUrls({
-    required int recordId,
-    String? audioUrl,
-    String? imageUrl,
-  }) async {
+  /// GET /health（選用）
+  Future<bool> checkHealth() async {
     try {
-      final response = await _dio.put<Map<String, dynamic>>(
-        '/records/$recordId',
-        data: {
-          if (audioUrl != null) 'audio_url': audioUrl,
-          if (imageUrl != null) 'image_url': imageUrl,
-        },
-      );
-      return Record.fromJson(response.data!);
-    } on DioException catch (e) {
-      throw mapDioError(e);
+      final response = await _dio.get<Map<String, dynamic>>('/health');
+      return response.data?['status'] == 'ok';
+    } on DioException {
+      return false;
     }
+  }
+
+  String _basename(String path, {required String fallback}) {
+    final name = path.split(Platform.pathSeparator).last;
+    return name.isNotEmpty ? name : fallback;
   }
 }
