@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_colors.dart';
-import '../../../core/widgets/glass_card.dart';
+import '../../../core/widgets/layered_background.dart';
 import '../models/surveyor_profile.dart';
 import '../providers/surveyor_profile_provider.dart';
 
@@ -61,91 +61,126 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      body: WeaveBackground(
+      backgroundColor: Colors.white,
+      body: LayeredAuthBackground(
         child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 420),
-                child: Column(
-                  children: [
-                    Container(
-                      width: 64,
-                      height: 64,
-                      decoration: const BoxDecoration(
-                        color: AppColors.primaryContainer,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.eco_outlined,
-                        color: AppColors.primary,
-                        size: 32,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Text('田野語料採集', style: theme.textTheme.headlineMedium),
-                    const SizedBox(height: 8),
-                    Text(
-                      '調查員簽到後開始採集語料',
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: AppColors.onSurfaceVariant,
-                      ),
-                    ),
-                    const SizedBox(height: 32),
-                    GlassCard(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      SizedBox(height: constraints.maxHeight * 0.11),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            '調查員姓名 *',
-                            style: theme.textTheme.labelSmall?.copyWith(
-                              color: AppColors.onSurfaceVariant,
+                          SizedBox(
+                            width: 72,
+                            height: 72,
+                            child: Icon(
+                              Icons.eco_outlined,
+                              size: 40,
+                              color: AppColors.primary.withValues(alpha: 0.35),
                             ),
-                          ),
-                          const SizedBox(height: 8),
-                          TextField(
-                            controller: _nameController,
-                            decoration: const InputDecoration(
-                              hintText: '請輸入您的姓名',
-                            ),
-                            textInputAction: TextInputAction.next,
                           ),
                           const SizedBox(height: 20),
                           Text(
-                            '調查地區',
-                            style: theme.textTheme.labelSmall?.copyWith(
-                              color: AppColors.onSurfaceVariant,
+                            '田野語料採集',
+                            style: theme.textTheme.headlineMedium?.copyWith(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 26,
                             ),
                           ),
                           const SizedBox(height: 8),
-                          TextField(
-                            controller: _regionController,
-                            decoration: const InputDecoration(
-                              hintText: '例如：花蓮縣秀林鄉',
+                          Text(
+                            '調查員簽到後開始採集語料',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: AppColors.onSurfaceVariant,
                             ),
-                            textInputAction: TextInputAction.done,
-                            onSubmitted: (_) => _submit(),
-                          ),
-                          if (_error != null) ...[
-                            const SizedBox(height: 12),
-                            Text(
-                              _error!,
-                              style: TextStyle(color: theme.colorScheme.error),
-                            ),
-                          ],
-                          const SizedBox(height: 24),
-                          FilledButton(
-                            onPressed: _submit,
-                            child: const Text('進入採集系統'),
                           ),
                         ],
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 28),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: AppColors.outlineVariant.withValues(alpha: 0.5),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.04),
+                              blurRadius: 16,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Text(
+                              '調查員姓名 *',
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                color: AppColors.onSurfaceVariant,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            TextField(
+                              controller: _nameController,
+                              decoration: const InputDecoration(
+                                hintText: '請輸入您的姓名',
+                                fillColor: Color(0xFFF8FAF9),
+                              ),
+                              textInputAction: TextInputAction.next,
+                            ),
+                            const SizedBox(height: 18),
+                            Text(
+                              '調查地區',
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                color: AppColors.onSurfaceVariant,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            TextField(
+                              controller: _regionController,
+                              decoration: const InputDecoration(
+                                hintText: '例如：花蓮縣秀林鄉',
+                                fillColor: Color(0xFFF8FAF9),
+                              ),
+                              textInputAction: TextInputAction.done,
+                              onSubmitted: (_) => _submit(),
+                            ),
+                            if (_error != null) ...[
+                              const SizedBox(height: 12),
+                              Text(
+                                _error!,
+                                style: TextStyle(color: theme.colorScheme.error),
+                              ),
+                            ],
+                            const SizedBox(height: 20),
+                            FilledButton(
+                              onPressed: _submit,
+                              style: FilledButton.styleFrom(
+                                minimumSize: const Size.fromHeight(50),
+                                backgroundColor: AppColors.secondary,
+                              ),
+                              child: const Text('進入採集系統'),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: constraints.maxHeight * 0.05),
+                    ],
+                  ),
                 ),
-              ),
-            ),
+              );
+            },
           ),
         ),
       ),
