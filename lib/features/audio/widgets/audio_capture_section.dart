@@ -1,8 +1,9 @@
 import 'dart:async';
 
-import 'package:audio_waveforms/audio_waveforms.dart';
+import 'package:audio_waveforms/audio_waveforms.dart' hide PlayerState;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../records/providers/create_record_notifier.dart';
@@ -23,15 +24,27 @@ class _AudioCaptureSectionState extends ConsumerState<AudioCaptureSection> {
   final _player = AudioPlayerService();
   bool _useWaveform = true;
   bool _isRecording = false;
+  bool _isPreviewPlaying = false;
   String? _savedPath;
   String? _error;
   Timer? _uiTimer;
   int _seconds = 0;
+  StreamSubscription<PlayerState>? _playerSub;
 
   @override
   void initState() {
     super.initState();
     _initWaveform();
+    _playerSub = _player.playerStateStream.listen(_onPlayerState);
+  }
+
+  void _onPlayerState(PlayerState playerState) {
+    if (!mounted) return;
+    final playing = playerState.playing &&
+        playerState.processingState != ProcessingState.completed;
+    if (_isPreviewPlaying != playing) {
+      setState(() => _isPreviewPlaying = playing);
+    }
   }
 
   Future<void> _initWaveform() async {
@@ -49,6 +62,7 @@ class _AudioCaptureSectionState extends ConsumerState<AudioCaptureSection> {
   @override
   void dispose() {
     _uiTimer?.cancel();
+    _playerSub?.cancel();
     _waveformController?.dispose();
     _fallbackRecorder.dispose();
     _player.dispose();
@@ -150,6 +164,10 @@ class _AudioCaptureSectionState extends ConsumerState<AudioCaptureSection> {
 
   Future<void> _preview() async {
     if (_savedPath == null) return;
+    if (_isPreviewPlaying) {
+      await _player.pause();
+      return;
+    }
     await _player.playFile(_savedPath!);
   }
 
@@ -231,10 +249,12 @@ class _AudioCaptureSectionState extends ConsumerState<AudioCaptureSection> {
               Row(
                 children: [
                   Expanded(
-                    child: OutlinedButton.icon(
+                    child: FilledButton.icon(
                       onPressed: _preview,
-                      icon: const Icon(Icons.play_arrow),
-                      label: const Text('預覽'),
+                      icon: Icon(
+                        _isPreviewPlaying ? Icons.pause : Icons.play_arrow,
+                      ),
+                      label: Text(_isPreviewPlaying ? '暫停預覽' : '預覽錄音'),
                     ),
                   ),
                   const SizedBox(width: 12),

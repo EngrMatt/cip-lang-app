@@ -9,15 +9,19 @@ class AudioPlayerService {
   Stream<Duration?> get durationStream => _player.durationStream;
   Stream<PlayerState> get playerStateStream => _player.playerStateStream;
 
+  Future<void> prepareUrl(String url) => _player.setUrl(url);
+
   Future<void> playFile(String path) async {
     await _player.setFilePath(path);
     await _player.play();
   }
 
   Future<void> playUrl(String url) async {
-    await _player.setUrl(url);
+    await prepareUrl(url);
     await _player.play();
   }
+
+  Future<void> play() => _player.play();
 
   Future<void> pause() => _player.pause();
   Future<void> stop() => _player.stop();

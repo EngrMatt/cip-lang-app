@@ -1,8 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:just_audio/just_audio.dart';
 
 import '../../../core/widgets/async_value_widget.dart';
@@ -20,63 +21,76 @@ class RecordDetailPage extends ConsumerStatefulWidget {
 
 class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
   final _player = AudioPlayerService();
-  PlayerController? _waveformPlayer;
   bool _isPlaying = false;
-  bool _waveformReady = false;
-  String? _waveformError;
+  bool _isAudioLoading = false;
+  bool _isAudioReady = false;
+  String? _audioLoadError;
+  String? _preparedUrl;
+  StreamSubscription<PlayerState>? _playerSub;
+
+  @override
+  void initState() {
+    super.initState();
+    _playerSub = _player.playerStateStream.listen(_onPlayerState);
+  }
+
+  void _onPlayerState(PlayerState playerState) {
+    if (!mounted) return;
+    final playing = playerState.playing &&
+        playerState.processingState != ProcessingState.completed;
+    if (_isPlaying != playing) {
+      setState(() => _isPlaying = playing);
+    }
+  }
 
   @override
   void dispose() {
-    _waveformPlayer?.dispose();
+    _playerSub?.cancel();
     _player.dispose();
     super.dispose();
   }
 
-  Future<void> _prepareWaveform(String url) async {
+  String _formatDuration(Duration duration) {
+    final minutes = duration.inMinutes.remainder(60).toString().padLeft(2, '0');
+    final seconds = duration.inSeconds.remainder(60).toString().padLeft(2, '0');
+    return '$minutes:$seconds';
+  }
+
+  Future<void> _prepareAudio(String url) async {
+    if (_preparedUrl == url && (_isAudioReady || _isAudioLoading)) return;
+
+    setState(() {
+      _preparedUrl = url;
+      _isAudioLoading = true;
+      _isAudioReady = false;
+      _audioLoadError = null;
+      _isPlaying = false;
+    });
+
     try {
-      final controller = PlayerController();
-      await controller.preparePlayer(
-        path: url,
-        shouldExtractWaveform: true,
-      );
-      if (mounted) {
-        setState(() {
-          _waveformPlayer = controller;
-          _waveformReady = true;
-        });
-      }
+      await _player.prepareUrl(url);
+      if (!mounted || _preparedUrl != url) return;
+      setState(() {
+        _isAudioLoading = false;
+        _isAudioReady = true;
+      });
     } catch (e) {
-      if (mounted) {
-        setState(() {
-          _waveformError = e.toString();
-          _waveformReady = false;
-        });
-      }
+      if (!mounted || _preparedUrl != url) return;
+      setState(() {
+        _isAudioLoading = false;
+        _audioLoadError = e.toString().replaceFirst('Exception: ', '');
+      });
     }
   }
 
-  Future<void> _togglePlay(String? url) async {
-    if (url == null) return;
+  Future<void> _togglePlay() async {
+    if (!_isAudioReady || _isAudioLoading) return;
     try {
       if (_isPlaying) {
         await _player.pause();
-        await _waveformPlayer?.pausePlayer();
-        setState(() => _isPlaying = false);
-      } else {
-        if (_waveformPlayer == null && _waveformError == null) {
-          await _prepareWaveform(url);
-        }
-        await _player.playUrl(url);
-        await _waveformPlayer?.startPlayer();
-        setState(() => _isPlaying = true);
-        _player.playerStateStream.listen((playerState) {
-          if (playerState.processingState == ProcessingState.completed &&
-              mounted) {
-            _waveformPlayer?.stopPlayer();
-            setState(() => _isPlaying = false);
-          }
-        });
+        return;
       }
+      await _player.play();
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -102,10 +116,9 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
       body: AsyncValueWidget(
         value: recordAsync,
         data: (record) {
-          if (record.audioUrl != null &&
-              _waveformPlayer == null &&
-              _waveformError == null) {
-            Future.microtask(() => _prepareWaveform(record.audioUrl!));
+          final audioUrl = record.audioUrl;
+          if (audioUrl != null && _preparedUrl != audioUrl) {
+            Future.microtask(() => _prepareAudio(audioUrl));
           }
 
           return SingleChildScrollView(
@@ -151,33 +164,40 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
                         Text('錄音',
                             style: Theme.of(context).textTheme.titleMedium),
                         const SizedBox(height: 12),
-                        if (record.audioUrl != null) ...[
-                          if (_waveformReady && _waveformPlayer != null)
-                            AudioFileWaveforms(
-                              size: Size(
-                                MediaQuery.of(context).size.width - 72,
-                                80,
-                              ),
-                              playerController: _waveformPlayer!,
-                              enableSeekGesture: true,
-                              waveformType: WaveformType.long,
-                            )
-                          else if (_waveformError != null)
-                            Text(
-                              '波形載入失敗，仍可播放',
-                              style: TextStyle(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onSurfaceVariant,
-                              ),
-                            ),
+                        if (audioUrl != null) ...[
+                          _RemoteAudioPlayer(
+                            isPlaying: _isPlaying,
+                            isLoading: _isAudioLoading,
+                            isReady: _isAudioReady,
+                            loadError: _audioLoadError,
+                            player: _player,
+                            formatDuration: _formatDuration,
+                          ),
                           const SizedBox(height: 12),
                           FilledButton.icon(
-                            onPressed: () => _togglePlay(record.audioUrl),
-                            icon: Icon(
-                              _isPlaying ? Icons.pause : Icons.play_arrow,
+                            onPressed:
+                                _isAudioReady && !_isAudioLoading ? _togglePlay : null,
+                            icon: _isAudioLoading
+                                ? const SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : Icon(
+                                    _isPlaying ? Icons.pause : Icons.play_arrow,
+                                  ),
+                            label: Text(
+                              _isAudioLoading
+                                  ? '載入錄音中…'
+                                  : _audioLoadError != null
+                                      ? '無法載入錄音'
+                                      : _isPlaying
+                                          ? '暫停'
+                                          : '播放錄音',
                             ),
-                            label: Text(_isPlaying ? '暫停' : '播放錄音'),
                           ),
                         ] else
                           Text(
@@ -210,10 +230,17 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
                               height: 220,
                               width: double.infinity,
                               fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) =>
-                                  const _MediaPlaceholder(
-                                message: '照片載入失敗',
-                              ),
+                              loadingBuilder: (context, child, progress) {
+                                if (progress == null) return child;
+                                return const SizedBox(
+                                  height: 220,
+                                  child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                );
+                              },
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const _MediaPlaceholder(message: '照片載入失敗'),
                             ),
                           )
                         else
@@ -255,6 +282,107 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class _RemoteAudioPlayer extends StatelessWidget {
+  const _RemoteAudioPlayer({
+    required this.isPlaying,
+    required this.isLoading,
+    required this.isReady,
+    required this.loadError,
+    required this.player,
+    required this.formatDuration,
+  });
+
+  final bool isPlaying;
+  final bool isLoading;
+  final bool isReady;
+  final String? loadError;
+  final AudioPlayerService player;
+  final String Function(Duration) formatDuration;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          Icon(
+            isLoading
+                ? Icons.hourglass_top
+                : isPlaying
+                    ? Icons.graphic_eq
+                    : Icons.audiotrack,
+            size: 40,
+            color: isReady
+                ? theme.colorScheme.primary
+                : theme.colorScheme.onSurfaceVariant,
+          ),
+          const SizedBox(height: 12),
+          if (loadError != null)
+            Text(
+              loadError!,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: theme.colorScheme.error),
+            )
+          else if (isLoading)
+            Text(
+              '正在下載錄音…',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            )
+          else
+            StreamBuilder<Duration>(
+              stream: player.positionStream,
+              builder: (context, positionSnapshot) {
+                final position = positionSnapshot.data ?? Duration.zero;
+                return StreamBuilder<Duration?>(
+                  stream: player.durationStream,
+                  builder: (context, durationSnapshot) {
+                    final duration = durationSnapshot.data;
+                    final maxMs = duration?.inMilliseconds ?? 1;
+                    final value = duration == null
+                        ? 0.0
+                        : position.inMilliseconds / maxMs;
+
+                    return Column(
+                      children: [
+                        Slider(
+                          value: value.clamp(0.0, 1.0),
+                          onChanged: !isReady || duration == null
+                              ? null
+                              : (v) => player.seek(
+                                    Duration(
+                                      milliseconds: (v * maxMs).round(),
+                                    ),
+                                  ),
+                        ),
+                        Text(
+                          duration == null
+                              ? '—'
+                              : '${formatDuration(position)} / ${formatDuration(duration)}',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                            fontFeatures: const [FontFeature.tabularFigures()],
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
+        ],
       ),
     );
   }
