@@ -59,9 +59,9 @@ class RecordListPage extends ConsumerWidget {
                 data: (response) {
                   if (response.items.isEmpty) {
                     return EmptyState(
-                      message: '尚無語料紀錄\n點擊底部「新增」開始採集',
+                      message: '尚無語料紀錄\n點擊右下角 ＋ 開始採集',
                       action: FilledButton.icon(
-                        onPressed: () => context.go('/create'),
+                        onPressed: () => context.push('/records/new'),
                         icon: const Icon(Icons.add),
                         label: const Text('新增語料'),
                       ),
@@ -72,7 +72,7 @@ class RecordListPage extends ConsumerWidget {
                     onRefresh: () =>
                         ref.read(recordsListProvider.notifier).refresh(),
                     child: ListView.builder(
-                      padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+                      padding: const EdgeInsets.fromLTRB(20, 8, 20, 72),
                       itemCount: response.items.length +
                           (response.items.length < response.total ? 1 : 0),
                       itemBuilder: (context, index) {

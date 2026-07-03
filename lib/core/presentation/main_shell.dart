@@ -21,7 +21,18 @@ class MainShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       body: navigationShell,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.push('/records/new'),
+        backgroundColor: AppColors.primary,
+        foregroundColor: AppColors.onPrimary,
+        elevation: 4,
+        highlightElevation: 6,
+        shape: const CircleBorder(),
+        child: const Icon(Icons.add, size: 28),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: AppColors.surface.withValues(alpha: 0.92),
@@ -38,33 +49,32 @@ class MainShell extends StatelessWidget {
         ),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _NavItem(
-                  icon: Icons.description_outlined,
-                  label: '語料',
-                  selected: navigationShell.currentIndex == 0,
-                  onTap: () => _onTap(0),
+                Expanded(
+                  child: _NavItem(
+                    icon: Icons.description_outlined,
+                    label: '語料',
+                    selected: navigationShell.currentIndex == 0,
+                    onTap: () => _onTap(0),
+                  ),
                 ),
-                _NavItem(
-                  icon: Icons.add_circle_outline,
-                  label: '新增',
-                  selected: navigationShell.currentIndex == 1,
-                  onTap: () => _onTap(1),
+                Expanded(
+                  child: _NavItem(
+                    icon: Icons.map_outlined,
+                    label: '探索',
+                    selected: navigationShell.currentIndex == 1,
+                    onTap: () => _onTap(1),
+                  ),
                 ),
-                _NavItem(
-                  icon: Icons.map_outlined,
-                  label: '探索',
-                  selected: navigationShell.currentIndex == 2,
-                  onTap: () => _onTap(2),
-                ),
-                _NavItem(
-                  icon: Icons.settings_outlined,
-                  label: '設定',
-                  selected: navigationShell.currentIndex == 3,
-                  onTap: () => _onTap(3),
+                Expanded(
+                  child: _NavItem(
+                    icon: Icons.settings_outlined,
+                    label: '設定',
+                    selected: navigationShell.currentIndex == 2,
+                    onTap: () => _onTap(2),
+                  ),
                 ),
               ],
             ),
@@ -96,7 +106,7 @@ class _NavItem extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        padding: const EdgeInsets.symmetric(vertical: 6),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -109,22 +119,25 @@ class _NavItem extends StatelessWidget {
                     fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
                   ),
             ),
-            if (selected)
-              Container(
-                margin: const EdgeInsets.only(top: 4),
-                width: 4,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: AppColors.secondary,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.secondary.withValues(alpha: 0.5),
-                      blurRadius: 6,
-                    ),
-                  ],
-                ),
-              ),
+            SizedBox(
+              height: 8,
+              child: selected
+                  ? Container(
+                      width: 4,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: AppColors.secondary,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.secondary.withValues(alpha: 0.5),
+                            blurRadius: 6,
+                          ),
+                        ],
+                      ),
+                    )
+                  : null,
+            ),
           ],
         ),
       ),

@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/auth/presentation/login_page.dart';
 import '../../features/auth/providers/auth_provider.dart';
-import '../../features/create/presentation/create_hub_page.dart';
 import '../../features/explore/presentation/explore_page.dart';
 import '../../features/onboarding/presentation/checkin_page.dart';
 import '../../features/onboarding/providers/surveyor_profile_provider.dart';
@@ -62,14 +61,6 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: '/records',
                 builder: (context, state) => const RecordListPage(),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: '/create',
-                builder: (context, state) => const CreateHubPage(),
               ),
             ],
           ),
