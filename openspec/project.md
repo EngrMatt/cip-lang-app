@@ -27,9 +27,20 @@
 
 - 帳號登入與驗證
 - GPS 定位
-- 離線同步
+- 離線背景同步（Phase 1.5 僅本地草稿）
 - AI 逐字稿 / 摘要
 - 分享與匯出
+
+## Phase 1.5 能力（已完成）
+
+| 功能 | 說明 |
+|------|------|
+| 調查員簽到 | 虛擬調查員姓名/地區，shared_preferences 持久化 |
+| 列表篩選 | API category + 前端媒體狀態 Filter Chips |
+| 族語符號列 | 標題/備註快捷輸入族語符號 |
+| 錄音/播放波形 | audio_waveforms 即時波形與 seek |
+| 草稿恢復 | Hive 本地草稿、離開提示、列表 banner |
+| 照片裁剪 | image_cropper 拍照後裁剪 |
 
 ## 技術堆疊
 
@@ -39,9 +50,10 @@
 | 語言 | Dart |
 | 狀態管理 | Riverpod |
 | 網路 | Dio |
-| 錄音 | `record` |
-| 播放 | `just_audio` |
-| 相機 | `image_picker` |
+| 錄音 | `record` + `audio_waveforms`（波形 UI） |
+| 播放 | `just_audio` + `audio_waveforms` |
+| 相機 | `image_picker` + `image_cropper` |
+| 本地儲存 | `shared_preferences`（調查員）、`hive`（草稿） |
 | 媒體儲存 | AWS S3（透過 API 上傳；MVP 可先以 URL 字串對接後端） |
 
 ## 後端 API 整合
@@ -82,6 +94,9 @@ cip-lang-app/
 │   │   ├── config/              # API base URL 等設定
 │   │   └── network/             # Dio client、攔截器
 │   ├── features/
+│   │   ├── onboarding/          # 調查員簽到
+│   │   ├── drafts/              # 本地草稿
+│   │   ├── input/               # 族語符號輸入
 │   │   ├── records/             # 列表、詳細、新增
 │   │   ├── audio/               # 錄音與播放
 │   │   └── camera/              # 拍照與預覽
@@ -136,8 +151,8 @@ cip-lang-app/
 
 ### 測試
 
-- 單元測試：`flutter test`（**待引入**）
-- Widget 測試：關鍵流程（列表、新增、上傳）（**待引入**）
+- 單元測試：`flutter test`（note 前綴注入等）
+- Widget 測試：App smoke test
 - 優先測試真實行為，避免瑣碎斷言
 
 ### 平台權限

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-TW"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>紀錄詳情 - 文化科技典藏</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-container": "#00311f",
+                    "surface-container-highest": "#e1e3e1",
+                    "outline": "#717975",
+                    "surface-container": "#f0f1f0",
+                    "on-secondary-fixed": "#002113",
+                    "secondary": "#006d4a",
+                    "on-surface": "#191c1b",
+                    "surface-container-low": "#f8f9f8",
+                    "error": "#ba1a1a",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "on-background": "#191c1b",
+                    "tertiary-fixed": "#ffddb8",
+                    "tertiary": "#825500",
+                    "surface-container-high": "#e7e9e7",
+                    "error-container": "#ffdad6",
+                    "secondary-fixed-dim": "#4edea3",
+                    "surface-dim": "#d9dbd9",
+                    "outline-variant": "#c1c8c3",
+                    "on-primary-container": "#002118",
+                    "tertiary-container": "#ffddb8",
+                    "surface": "#f8f9f8",
+                    "primary-fixed": "#c8eadb",
+                    "on-surface-variant": "#414845",
+                    "surface-container-lowest": "#ffffff",
+                    "background": "#f8f9f8",
+                    "on-secondary-fixed-variant": "#005236",
+                    "on-primary-fixed-variant": "#2f4d42",
+                    "primary-container": "#c8eadb",
+                    "inverse-primary": "#adcec0",
+                    "inverse-on-surface": "#eff1ef",
+                    "secondary-fixed": "#6ffbbe",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "on-error-container": "#410002",
+                    "primary": "#466559",
+                    "surface-bright": "#f8f9f8",
+                    "on-primary": "#ffffff",
+                    "surface-variant": "#dee4e0",
+                    "inverse-surface": "#2e3130",
+                    "on-primary-fixed": "#012018",
+                    "on-error": "#ffffff",
+                    "surface-tint": "#466559",
+                    "primary-fixed-dim": "#adcec0",
+                    "secondary-container": "#6ffbbe",
+                    "on-tertiary-container": "#2a1700",
+                    "on-tertiary-fixed": "#2a1700"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "stack-sm": "12px",
+                    "stack-lg": "32px",
+                    "container-padding": "24px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "body-md": ["Be Vietnam Pro"],
+                    "body-sm": ["Be Vietnam Pro"],
+                    "headline-lg": ["Manrope"],
+                    "waveform-timestamp": ["JetBrains Mono"],
+                    "label-caps": ["JetBrains Mono"],
+                    "display-lg": ["Manrope"],
+                    "headline-lg-mobile": ["Manrope"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                    "waveform-timestamp": ["10px", {"lineHeight": "12px", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+        }
+        .primary-gradient {
+            background: linear-gradient(135deg, #466559 0%, #10B981 100%);
+        }
+        .waveform-container {
+            mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+        }
+        .weave-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20v20H0V0zm20 20h20v20H20V20zM0 20h20v20H0V20zm20-20h20v20H20V0z' fill='%23000000' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 bg-surface/80 backdrop-blur-xl flex justify-between items-center w-full px-container-padding h-16 transition-all duration-300 ease-in-out border-b border-outline-variant/30">
+<div class="flex items-center gap-4">
+<button class="hover:bg-on-surface/5 p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">阿美族問候語</h1>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant hover:bg-on-surface/5 p-2 rounded-full cursor-pointer transition-colors">sync</span>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-primary/20">
+<img alt="研究員頭像" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRtEF3iFMBd7QF9T5_Zui1c0ttBSQ2Y9MAg3tNJUjp6I1u7W_KPm4qbHBxvOP4SDnDuENcyeJqlb4okCPZR3SX0ETgqXVxrJE2hSDnFi7WRo2ukHS_c-7eRZs1cha1AlWSyjEgts0tkCHEM56VZhqd-593rXOY3bnYJlT9H99FfLbVKr4RYn7YzMOeINzOJBfSMgxW6g9qRcCf8oCqxXF0bzLUmmfL0u2pOhIE-6ZkgmBKb9ZOESP7SLV_gLshpDSXOJqgeaVCl4c"/>
+</div>
+</div>
+</header>
+<main class="max-w-[1200px] mx-auto px-gutter py-8 space-y-stack-lg">
+<!-- Photo Preview Card -->
+<section class="relative group">
+<div class="glass-card rounded-lg overflow-hidden h-72 md:h-[400px] relative">
+<img alt="典藏紀錄預覽" class="w-full h-full object-cover opacity-95 group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6DO2Ysgy55gCkBVpZQoTz3hho85cU7dZmO_DtGn9OP15lq5K57VDg2j_X_6CIjhly0I2MqvGkFZXf_1wDobboN-P84MclwM8KSb4i0jEwWPSyTYPTuOSny-fg79WD9mRzeKdWXYzIvYaooTUiDgbkuYKlDkxWVIvUNna01cnhWwMh7PSDdwFb4KFkXbccQ6lTjcB4TOUN-7g0YETW5gRqCTksf-6jfpNHPLcV9TKq4xiv0oD-GrUwlaHjo5hkKqJ4D5NSSrMDUHI"/>
+<div class="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent"></div>
+<div class="absolute bottom-6 left-6 right-6 flex justify-between items-end">
+<span class="font-label-caps text-label-caps bg-primary text-white px-4 py-2 rounded-full border border-white/20 uppercase tracking-widest shadow-lg">視覺參考</span>
+</div>
+</div>
+</section>
+<!-- Record Info Card -->
+<section class="glass-card rounded-lg p-container-padding weave-pattern">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">description</span>
+<span class="font-label-caps text-label-caps text-secondary uppercase tracking-widest">語言紀錄 #482</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">口述傳統保存</h2>
+<div class="flex flex-wrap gap-4 text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">schedule</span>
+<span class="text-body-sm font-body-sm">紀錄時間: 2023年10月14日 • 08:42 AM</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="text-body-sm font-body-sm">花蓮，台灣（阿美族領地）</span>
+</div>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="flex items-center gap-2 border-[1.5px] border-primary text-primary font-label-caps text-label-caps px-6 py-3 rounded-full hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined">share</span>
+                    分享
+                </button>
+<button class="flex items-center gap-2 primary-gradient text-white font-label-caps text-label-caps px-6 py-3 rounded-full hover:shadow-[0_4px_12px_rgba(70,101,89,0.3)] transition-all">
+<span class="material-symbols-outlined">edit</span>
+                    編輯
+                </button>
+</div>
+</div>
+<div class="mt-8 pt-8 border-t border-outline-variant/30">
+<p class="text-on-surface-variant font-body-md leading-relaxed max-w-3xl">
+                針對阿美族標準問候語的詳細語言分析。重點在於不同世代間使用的聲調變化，以及在此特定方言群中「Kaka」（長者）稱呼的文化意義。包含有關季節性豐年祭時機的背景元數據。
+            </p>
+</div>
+</section>
+<!-- Audio Player Card -->
+<section class="glass-card rounded-lg p-container-padding">
+<div class="flex flex-col gap-8">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-4">
+<button class="w-16 h-16 rounded-full primary-gradient flex items-center justify-center text-white shadow-md hover:scale-105 transition-transform" id="playPauseBtn">
+<span class="material-symbols-outlined text-3xl" id="playIcon">play_arrow</span>
+</button>
+<div>
+<p class="font-headline-lg text-2xl text-on-surface">田野錄音 02.wav</p>
+<p class="text-body-sm font-body-sm text-secondary font-medium">阿美族語 • 02:45</p>
+</div>
+</div>
+<div class="hidden md:flex gap-4">
+<button class="hover:bg-on-surface/5 p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">volume_up</span>
+</button>
+<button class="hover:bg-on-surface/5 p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Waveform Visualization -->
+<div class="relative h-24 flex items-center gap-[2px] cursor-pointer waveform-container" id="waveform">
+<!-- JS will populate bars here -->
+<div class="absolute top-0 bottom-0 w-[2px] bg-tertiary z-10 shadow-[0_0_8px_rgba(130,85,0,0.3)] transition-all duration-100" id="playhead" style="left: 0%">
+<div class="absolute -top-6 left-1/2 -translate-x-1/2 font-waveform-timestamp text-waveform-timestamp bg-surface-container-highest px-2 py-0.5 rounded text-tertiary whitespace-nowrap shadow-sm border border-outline-variant">00:00</div>
+</div>
+</div>
+<div class="flex justify-between font-waveform-timestamp text-waveform-timestamp text-on-surface-variant/70">
+<span>0:00</span>
+<span>1:22</span>
+<span>2:45</span>
+</div>
+</div>
+</section>
+<!-- Notes & Transcript Section (Bento Style) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<div class="md:col-span-2 glass-card rounded-lg p-container-padding space-y-4">
+<h3 class="font-label-caps text-label-caps text-primary uppercase tracking-widest">逐字稿草稿</h3>
+<div class="space-y-4 text-on-surface-variant font-body-md">
+<p class="border-l-2 border-secondary pl-4"><span class="text-secondary font-waveform-timestamp font-bold">00:12</span> Nga’ay ho. O ’Amis kako. (你好。我是阿美族人。)</p>
+<p class="pl-4 opacity-70"><span class="font-waveform-timestamp">00:18</span> [環境鳥鳴聲 - 錄音品質檢查]</p>
+<p class="border-l-2 border-tertiary pl-4"><span class="text-tertiary font-waveform-timestamp font-bold">00:24</span> Makapahay a romi’ad anini. (今天天氣真好。)</p>
+</div>
+</div>
+<div class="glass-card rounded-lg p-container-padding space-y-4 flex flex-col justify-between">
+<div>
+<h3 class="font-label-caps text-label-caps text-primary uppercase tracking-widest mb-4">元數據標籤</h3>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 rounded-full bg-surface-container-high text-body-sm text-on-surface-variant border border-outline-variant/50">#阿美族</span>
+<span class="px-3 py-1 rounded-full bg-surface-container-high text-body-sm text-on-surface-variant border border-outline-variant/50">#問候</span>
+<span class="px-3 py-1 rounded-full bg-surface-container-high text-body-sm text-on-surface-variant border border-outline-variant/50">#花蓮</span>
+<span class="px-3 py-1 rounded-full bg-surface-container-high text-body-sm text-on-surface-variant border border-outline-variant/50">#田野筆記</span>
+</div>
+</div>
+<div class="pt-6 border-t border-outline-variant/30">
+<p class="text-body-sm text-on-surface-variant italic opacity-80">最後同步於雲端資料庫：2 小時前</p>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-gutter py-4 bg-white/80 backdrop-blur-2xl border-t border-outline-variant/30 shadow-lg rounded-t-lg">
+<a class="flex flex-col items-center justify-center text-primary relative after:content-[''] after:w-1 after:h-1 after:bg-primary after:rounded-full after:mt-1 Active: scale-95 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-label-caps text-label-caps mt-1">紀錄</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-primary hover:opacity-100 transition-all" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-label-caps text-label-caps mt-1">新增</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-primary hover:opacity-100 transition-all" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="font-label-caps text-label-caps mt-1">探索</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-primary hover:opacity-100 transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-caps text-label-caps mt-1">設定</span>
+</a>
+</nav>
+<script>
+    // Waveform Generator
+    const waveform = document.getElementById('waveform');
+    const barCount = 60;
+    const bars = [];
+
+    for (let i = 0; i < barCount; i++) {
+        const bar = document.createElement('div');
+        const height = Math.random() * 80 + 20;
+        bar.className = 'w-1 bg-on-surface/10 rounded-full transition-all duration-300 hover:bg-secondary';
+        bar.style.height = `${height}%`;
+        waveform.appendChild(bar);
+        bars.push(bar);
+    }
+
+    // Play/Pause Interaction
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const playIcon = document.getElementById('playIcon');
+    const playhead = document.getElementById('playhead');
+    const timestamp = playhead.querySelector('div');
+    let isPlaying = false;
+    let progress = 0;
+    let animationId;
+
+    playPauseBtn.addEventListener('click', () => {
+        isPlaying = !isPlaying;
+        playIcon.textContent = isPlaying ? 'pause' : 'play_arrow';
+        
+        if (isPlaying) {
+            animate();
+        } else {
+            cancelAnimationFrame(animationId);
+        }
+    });
+
+    function animate() {
+        if (progress < 100) {
+            progress += 0.1;
+            playhead.style.left = `${progress}%`;
+            
+            // Highlight bars
+            const activeIndex = Math.floor((progress / 100) * barCount);
+            bars.forEach((bar, idx) => {
+                if (idx < activeIndex) {
+                    bar.style.backgroundColor = '#006d4a'; // secondary color
+                    bar.style.opacity = '1';
+                } else {
+                    bar.style.backgroundColor = 'rgba(25, 28, 27, 0.1)';
+                }
+            });
+
+            // Update timestamp
+            const totalSec = 165; // 2:45
+            const currentSec = Math.floor((progress / 100) * totalSec);
+            const mins = Math.floor(currentSec / 60);
+            const secs = currentSec % 60;
+            timestamp.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+            animationId = requestAnimationFrame(animate);
+        } else {
+            isPlaying = false;
+            playIcon.textContent = 'play_arrow';
+            progress = 0;
+        }
+    }
+
+    // Scrubbing logic
+    waveform.addEventListener('click', (e) => {
+        const rect = waveform.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        progress = (x / rect.width) * 100;
+        playhead.style.left = `${progress}%`;
+        
+        const activeIndex = Math.floor((progress / 100) * barCount);
+        bars.forEach((bar, idx) => {
+            if (idx < activeIndex) {
+                bar.style.backgroundColor = '#006d4a';
+            } else {
+                bar.style.backgroundColor = 'rgba(25, 28, 27, 0.1)';
+            }
+        });
+    });
+</script>
+</body></html>

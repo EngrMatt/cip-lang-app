@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-TW"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cultural Tech Archive - 新增照片</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500&amp;family=Manrope:wght@600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        .step-active {
+            box-shadow: 0 0 12px rgba(0, 165, 114, 0.2);
+        }
+        body {
+            background-color: #f8faf9;
+            color: #191c1b;
+            overflow-x: hidden;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-fixed-variant": "#653e00",
+                      "primary-container": "#c8eadb",
+                      "inverse-surface": "#2e3130",
+                      "tertiary-fixed-dim": "#ffb95f",
+                      "error-container": "#ffdad6",
+                      "on-error": "#ffffff",
+                      "on-primary-fixed-variant": "#2f4d42",
+                      "on-tertiary": "#ffffff",
+                      "surface-container": "#f1f1ef",
+                      "on-surface": "#191c1b",
+                      "tertiary": "#7d5700",
+                      "on-error-container": "#410002",
+                      "secondary": "#006d4a",
+                      "on-background": "#191c1b",
+                      "primary-fixed": "#c8eadb",
+                      "error": "#ba1a1a",
+                      "on-surface-variant": "#414845",
+                      "on-primary": "#ffffff",
+                      "tertiary-container": "#ffddb8",
+                      "on-secondary-fixed-variant": "#005236",
+                      "on-secondary": "#ffffff",
+                      "secondary-fixed-dim": "#4edea3",
+                      "on-primary-fixed": "#012018",
+                      "surface-tint": "#466559",
+                      "outline-variant": "#c1c8c3",
+                      "on-tertiary-container": "#2a1700",
+                      "surface-variant": "#dee4e0",
+                      "tertiary-fixed": "#ffddb8",
+                      "background": "#f8faf9",
+                      "inverse-primary": "#adcec0",
+                      "primary": "#466559",
+                      "surface-container-low": "#f7f9f7",
+                      "surface-container-highest": "#e1e3e1",
+                      "secondary-container": "#6ffbbe",
+                      "primary-fixed-dim": "#adcec0",
+                      "surface-bright": "#f8faf9",
+                      "surface-dim": "#d9dbd9",
+                      "secondary-fixed": "#6ffbbe",
+                      "inverse-on-surface": "#eff1ef",
+                      "surface": "#f8faf9",
+                      "on-secondary-fixed": "#002113",
+                      "on-tertiary-fixed": "#2a1700",
+                      "surface-container-high": "#ebeceb",
+                      "on-secondary-container": "#002113",
+                      "outline": "#717975",
+                      "on-primary-container": "#012018",
+                      "surface-container-lowest": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "16px",
+                      "stack-sm": "12px",
+                      "stack-lg": "32px",
+                      "container-padding": "24px",
+                      "base": "8px"
+              },
+              "fontFamily": {
+                      "body-md": ["Be Vietnam Pro"],
+                      "body-sm": ["Be Vietnam Pro"],
+                      "headline-lg": ["Manrope"],
+                      "waveform-timestamp": ["JetBrains Mono"],
+                      "label-caps": ["JetBrains Mono"],
+                      "display-lg": ["Manrope"],
+                      "headline-lg-mobile": ["Manrope"]
+              },
+              "fontSize": {
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                      "waveform-timestamp": ["10px", {"lineHeight": "12px", "fontWeight": "400"}],
+                      "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+      </script>
+</head>
+<body class="flex flex-col min-h-screen bg-background text-on-surface">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-container-padding h-16 z-50 bg-white/80 backdrop-blur-xl transition-all duration-300 ease-in-out fixed top-0 border-b border-outline-variant/30">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant/50">
+<img class="w-full h-full object-cover" data-alt="A professional investigator profile portrait for a field researcher." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPGZ1DjVSU64dvIHYyeMqY8I2yyVfgJcvOiUYiZzkpnvYNm3H8BhOCHIryDjQSafjLXIG3hNTeXmFYsDK9QFp3aoKnT7kkAtJEfd355I5oQSd7NXAuLRnkF9Ji7MIfrI_Q3BzoYcRzORIFzwpjOnbqoowkL_xcWwHlSmvjm76LayoDoeUtaLjEM2HUbfDB-lU6f3NcBSVdLYCgAu1TlUW65taihwm5KYqWNFnxmGiTV37mEU32b1llUcGTUEcmZbLmffThf8a3v5E"/>
+</div>
+<span class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">Cultural Tech Archive</span>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-primary hover:bg-primary-container transition-all">
+<span class="material-symbols-outlined">sync</span>
+</button>
+</header>
+<main class="flex-grow pt-24 pb-32 px-container-padding">
+<!-- Progress Indicator -->
+<section class="max-w-md mx-auto mb-stack-lg">
+<div class="flex justify-between items-center relative">
+<!-- Progress Line -->
+<div class="absolute top-1/2 left-0 w-full h-[2px] bg-surface-variant -translate-y-1/2 z-0"></div>
+<div class="absolute top-1/2 left-0 w-2/3 h-[2px] bg-secondary -translate-y-1/2 z-0 shadow-[0_0_4px_rgba(0,109,74,0.2)]"></div>
+<!-- Steps -->
+<div class="relative z-10 flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-bold text-sm">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<span class="font-label-caps text-[10px] text-secondary">基本資料</span>
+</div>
+<div class="relative z-10 flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-bold text-sm">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<span class="font-label-caps text-[10px] text-secondary">錄音</span>
+</div>
+<div class="relative z-10 flex flex-col items-center gap-2">
+<div class="w-10 h-10 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-bold text-base step-active">
+<span class="material-symbols-outlined text-[24px]">camera_alt</span>
+</div>
+<span class="font-label-caps text-[10px] text-secondary font-bold">拍照</span>
+</div>
+<div class="relative z-10 flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center font-bold text-sm">
+                        4
+                    </div>
+<span class="font-label-caps text-[10px] text-on-surface-variant">確認上傳</span>
+</div>
+</div>
+</section>
+<!-- Camera / Photo Section -->
+<section class="max-w-2xl mx-auto flex flex-col gap-8 items-center h-full">
+<div class="text-center">
+<h1 class="font-headline-lg text-headline-lg text-primary mb-2">視覺記錄</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-sm mx-auto">拍攝該文物或錄製環境的高解析度影像，以完整保存田野調查的現場脈絡。</p>
+</div>
+<!-- Preview Card -->
+<div class="relative w-full aspect-[3/4] md:aspect-video rounded-lg overflow-hidden glass-card group shadow-xl border border-outline-variant/30 transition-all duration-500 hover:scale-[1.01]">
+<img class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxldMo6Ib8L0rbiGsemkE6wEy6LDnKM5oekVwo5CPqFTeVQvvDSvKwtlSJmqwNEMks0aALqP9e01SSX7w3Yyew4dDytPlANQbYQdp2kX4uLb2StojyLvgKOvlAH0bBid2LbYm1Wink7PDUaiPImfzS0z_ljOEzb_fnZZEnVfi4n6sIAPUAVzl4XXA6shbh0orVcf8g3_bc6ybNTjyLp2cKCJIO2zNn_6oMVbqBcT1K_KMOIoSPV947XKmwwhqE3JmCk4zPxGTj8dI"/>
+<!-- Overlay Pattern (Weaving) -->
+<div class="absolute inset-0 pointer-events-none opacity-5 mix-blend-multiply" style="background-image: radial-gradient(circle at 2px 2px, #000 1px, transparent 0); background-size: 24px 24px;"></div>
+<!-- Scanner Effect -->
+<div class="absolute top-0 left-0 w-full h-[2px] bg-secondary/40 blur-[1px] shadow-[0_0_8px_rgba(0,109,74,0.3)] animate-[scan_4s_linear_infinite]"></div>
+<!-- Capture Controls (Internal) -->
+<div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-6">
+<button class="w-12 h-12 rounded-full glass-card flex items-center justify-center text-on-surface hover:text-secondary transition-colors" title="切換閃光燈">
+<span class="material-symbols-outlined">flash_on</span>
+</button>
+<div class="p-2 rounded-full border-2 border-primary/20 backdrop-blur-md">
+<button class="w-16 h-16 rounded-full bg-white border border-outline-variant/50 shadow-lg flex items-center justify-center hover:scale-95 transition-transform active:bg-secondary active:border-secondary">
+</button>
+</div>
+<button class="w-12 h-12 rounded-full glass-card flex items-center justify-center text-on-surface hover:text-secondary transition-colors" title="切換鏡頭">
+<span class="material-symbols-outlined">flip_camera_ios</span>
+</button>
+</div>
+<!-- Label Overlay -->
+<div class="absolute top-6 left-6 px-4 py-2 rounded-full glass-card flex items-center gap-2 border border-outline-variant/20 shadow-sm">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="font-label-caps text-[10px] text-on-surface uppercase tracking-widest">即時預覽 · 4K</span>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="w-full flex flex-col sm:flex-row gap-4 max-w-md">
+<button class="flex-1 px-8 py-4 rounded-full border-[1.5px] border-secondary text-secondary font-label-caps text-center hover:bg-secondary/5 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">replay</span>
+                    重新拍攝
+                </button>
+<button class="flex-[2] px-8 py-4 rounded-full bg-secondary text-on-secondary font-label-caps text-center shadow-[0_4px_12px_rgba(0,109,74,0.2)] hover:shadow-[0_8px_16px_rgba(0,109,74,0.3)] hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2">
+                    下一步：確認上傳
+                    <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-gutter py-4 bg-white/90 backdrop-blur-2xl border-t border-outline-variant/30 shadow-lg rounded-t-lg">
+<div class="flex flex-col items-center justify-center text-on-surface-variant opacity-60 hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined">description</span>
+<span class="font-label-caps text-label-caps mt-1">檔案庫</span>
+</div>
+<div class="flex flex-col items-center justify-center text-secondary relative after:content-[''] after:w-1 after:h-1 after:bg-secondary after:rounded-full after:mt-1 after:shadow-[0_0_4px_rgba(0,109,74,0.3)] Active: scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-label-caps text-label-caps mt-1">新增語料</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant opacity-60 hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined">map</span>
+<span class="font-label-caps text-label-caps mt-1">探索</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant opacity-60 hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-caps text-label-caps mt-1">設定</span>
+</div>
+</nav>
+<style>
+        @keyframes scan {
+            0% { top: 0%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+    </style>
+<script>
+        // Micro-interactions
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('mousedown', () => {
+                btn.style.transform = 'scale(0.98)';
+            });
+            btn.addEventListener('mouseup', () => {
+                btn.style.transform = 'scale(1)';
+            });
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body></html>

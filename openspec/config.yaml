@@ -7,10 +7,12 @@ context: |
   API base URL (default): https://cip-lang-test-20260624.nfs.tw (Swagger: /docs)
   Local override: --dart-define=API_BASE_URL=http://10.0.2.2:8280
 
-  Tech stack: Flutter 3.x, Dart, Riverpod, Dio, go_router, record, just_audio, image_picker
-  MVP: record list, create wizard, audio record/playback (required), camera, upload
+  Tech stack: Flutter 3.x, Dart, Riverpod, Dio, go_router, record, just_audio,
+    image_picker, shared_preferences, audio_waveforms, hive, image_cropper
+  MVP + Phase 1.5: record list (filters), surveyor checkin, create wizard (drafts,
+    indigenous symbols), audio waveform, photo crop, upload
   Design system: Field Ethos — primary #001813, surface #fbf9f8, Hanken Grotesk style
-  Out of scope: auth, GPS, offline sync, AI, backend code in this repo
+  Out of scope: auth, GPS, offline background sync, AI, backend code in this repo
 
   Conventions: feature-first lib/, Riverpod, repository layer for API, 繁體中文 UI
 

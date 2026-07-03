@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-TW"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>調查員簽到 | 文化語料資料庫</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&amp;family=Be+Vietnam+Pro:wght@400;500&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-tertiary-fixed-variant": "#653e00",
+            "primary-container": "#c8eadb",
+            "inverse-surface": "#2e3130",
+            "tertiary-fixed-dim": "#ffb95f",
+            "error-container": "#ffdad6",
+            "on-error": "#ffffff",
+            "on-primary-fixed-variant": "#2f4d42",
+            "on-tertiary": "#ffffff",
+            "surface-container": "#f1f1f1",
+            "on-surface": "#191c1b",
+            "tertiary": "#7e5700",
+            "on-error-container": "#410002",
+            "secondary": "#006d48",
+            "on-background": "#191c1b",
+            "primary-fixed": "#c8eadb",
+            "error": "#ba1a1a",
+            "on-surface-variant": "#414845",
+            "on-primary": "#ffffff",
+            "tertiary-container": "#ffddb8",
+            "on-secondary-fixed-variant": "#005236",
+            "on-secondary": "#ffffff",
+            "secondary-fixed-dim": "#4edea3",
+            "on-primary-fixed": "#012018",
+            "surface-tint": "#006d48",
+            "outline-variant": "#c1c8c3",
+            "on-tertiary-container": "#281900",
+            "surface-variant": "#dee5e0",
+            "tertiary-fixed": "#ffddb8",
+            "background": "#fbfdfa",
+            "inverse-primary": "#adcec0",
+            "primary": "#006d48",
+            "surface-container-low": "#f7f9f6",
+            "surface-container-highest": "#e1e3e1",
+            "secondary-container": "#6ffbbe",
+            "primary-fixed-dim": "#adcec0",
+            "surface-bright": "#fbfdfa",
+            "surface-dim": "#d9dbd8",
+            "secondary-fixed": "#6ffbbe",
+            "inverse-on-surface": "#f0f1ef",
+            "surface": "#fbfdfa",
+            "on-secondary-fixed": "#002113",
+            "on-tertiary-fixed": "#2a1700",
+            "surface-container-high": "#e7e9e6",
+            "on-secondary-container": "#002113",
+            "outline": "#717975",
+            "on-primary-container": "#002113",
+            "surface-container-lowest": "#ffffff"
+          },
+          "borderRadius": {
+            "DEFAULT": "1rem",
+            "lg": "2rem",
+            "xl": "3rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "gutter": "16px",
+            "stack-sm": "12px",
+            "stack-lg": "32px",
+            "container-padding": "24px",
+            "base": "8px"
+          },
+          "fontFamily": {
+            "body-md": ["Be Vietnam Pro"],
+            "body-sm": ["Be Vietnam Pro"],
+            "headline-lg": ["Manrope"],
+            "waveform-timestamp": ["JetBrains Mono"],
+            "label-caps": ["JetBrains Mono"],
+            "display-lg": ["Manrope"],
+            "headline-lg-mobile": ["Manrope"]
+          },
+          "fontSize": {
+            "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+            "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+            "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+            "waveform-timestamp": ["10px", {"lineHeight": "12px", "fontWeight": "400"}],
+            "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "500"}],
+            "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+            "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "600"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      background-color: #fbfdfa;
+      color: #191c1b;
+      overflow-x: hidden;
+      min-height: max(884px, 100dvh);
+    }
+
+    .glass-card {
+      background: rgba(0, 109, 72, 0.05);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(0, 109, 72, 0.1);
+    }
+
+    .weaving-pattern {
+      background-image: 
+        linear-gradient(45deg, rgba(0, 109, 72, 0.03) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(0, 109, 72, 0.03) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, rgba(0, 109, 72, 0.03) 75%),
+        linear-gradient(-45deg, transparent 75%, rgba(0, 109, 72, 0.03) 75%);
+      background-size: 40px 40px;
+      background-position: 0 0, 0 20px, 20px 20px, 20px 0;
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center p-gutter weaving-pattern">
+<div class="w-full max-w-md space-y-stack-lg">
+<div class="text-center space-y-base">
+<div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary-container text-primary mb-4">
+<span class="material-symbols-outlined text-4xl">account_balance</span>
+</div>
+<h1 class="font-headline-lg-mobile text-on-surface">調查員簽到</h1>
+<p class="font-body-md text-on-surface-variant">進入文化語料資料庫</p>
+</div>
+<main class="glass-card p-container-padding rounded-lg shadow-sm">
+<form class="space-y-6" onsubmit="event.preventDefault();">
+<div class="space-y-base">
+<label class="font-label-caps text-on-surface-variant block uppercase" for="email">調查員編號</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">alternate_email</span>
+<input class="w-full pl-12 pr-4 py-3 bg-surface border border-outline-variant rounded-full text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all" id="email" placeholder="investigator@archive.org" type="email"/>
+</div>
+</div>
+<div class="space-y-base">
+<label class="font-label-caps text-on-surface-variant block uppercase" for="password">通行密碼</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">lock</span>
+<input class="w-full pl-12 pr-4 py-3 bg-surface border border-outline-variant rounded-full text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all" id="password" placeholder="••••••••" type="password"/>
+</div>
+</div>
+<div class="flex items-center justify-between font-body-sm">
+<label class="flex items-center space-x-2 cursor-pointer">
+<input class="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary bg-surface" type="checkbox"/>
+<span class="text-on-surface-variant">記住我</span>
+</label>
+<a class="text-primary font-medium hover:underline" href="#">忘記密碼？</a>
+</div>
+<button class="w-full py-4 bg-primary text-on-primary font-headline-lg-mobile rounded-full hover:bg-secondary-container hover:text-on-secondary-container transition-colors shadow-lg shadow-primary/20" type="submit">
+          進入系統
+        </button>
+</form>
+<div class="mt-8 pt-8 border-t border-outline-variant">
+<p class="text-center font-label-caps text-on-surface-variant text-xs mb-4">請求授權存取</p>
+<div class="grid grid-cols-2 gap-4">
+<button class="flex items-center justify-center space-x-2 py-3 px-4 bg-surface-container border border-outline-variant rounded-full hover:bg-surface-container-high transition-colors text-on-surface">
+<span class="material-symbols-outlined text-xl">fingerprint</span>
+<span class="font-body-sm">生物辨識</span>
+</button>
+<button class="flex items-center justify-center space-x-2 py-3 px-4 bg-surface-container border border-outline-variant rounded-full hover:bg-surface-container-high transition-colors text-on-surface">
+<span class="material-symbols-outlined text-xl">key</span>
+<span class="font-body-sm">單一登入</span>
+</button>
+</div>
+</div>
+</main>
+<footer class="text-center space-y-4">
+<p class="font-body-sm text-on-surface-variant">
+        新調查員？ <a class="text-primary font-semibold hover:underline" href="#">申請存取權限</a>
+</p>
+<div class="flex justify-center space-x-6 text-outline">
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">language</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">help</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">policy</span>
+</div>
+</footer>
+</div>
+</body></html>

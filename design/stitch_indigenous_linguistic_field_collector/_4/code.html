@@ -1,0 +1,330 @@
+<html class="light" lang="zh-TW"><head></head><body class="font-body-md text-body-md selection:bg-secondary selection:text-on-secondary">```html
+
+
+    <meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>文化語料資料庫 Language Records Archive</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500&amp;family=Manrope:wght@600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Config Verbatim -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "primary-container": "#c8eadb",
+                    "inverse-surface": "#2e3130",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "on-primary-fixed-variant": "#2f4d42",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#e7e9e7",
+                    "on-surface": "#191c1b",
+                    "tertiary": "#7d5700",
+                    "on-error-container": "#410002",
+                    "secondary": "#006d4a",
+                    "on-background": "#191c1b",
+                    "primary-fixed": "#c8eadb",
+                    "error": "#ba1a1a",
+                    "on-surface-variant": "#414845",
+                    "on-primary": "#ffffff",
+                    "tertiary-container": "#ffddb8",
+                    "on-secondary-fixed-variant": "#005236",
+                    "on-secondary": "#ffffff",
+                    "secondary-fixed-dim": "#4edea3",
+                    "on-primary-fixed": "#012018",
+                    "surface-tint": "#466559",
+                    "outline-variant": "#c1c8c3",
+                    "on-tertiary-container": "#281900",
+                    "surface-variant": "#dee5e0",
+                    "tertiary-fixed": "#ffddb8",
+                    "background": "#fbfdfa",
+                    "inverse-primary": "#adcec0",
+                    "primary": "#466559",
+                    "surface-container-low": "#f1f4f1",
+                    "surface-container-highest": "#e1e3e1",
+                    "secondary-container": "#6ffbbe",
+                    "primary-fixed-dim": "#adcec0",
+                    "surface-bright": "#fbfdfa",
+                    "surface-dim": "#d8dbd8",
+                    "secondary-fixed": "#6ffbbe",
+                    "inverse-on-surface": "#f0f1ef",
+                    "surface": "#fbfdfa",
+                    "on-secondary-fixed": "#002113",
+                    "on-tertiary-fixed": "#2a1700",
+                    "surface-container-high": "#e1e3e1",
+                    "on-secondary-container": "#002113",
+                    "outline": "#717975",
+                    "on-primary-container": "#012018",
+                    "surface-container-lowest": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "stack-sm": "12px",
+                    "stack-lg": "32px",
+                    "container-padding": "24px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "body-md": ["Be Vietnam Pro"],
+                    "body-sm": ["Be Vietnam Pro"],
+                    "headline-lg": ["Manrope"],
+                    "waveform-timestamp": ["JetBrains Mono"],
+                    "label-caps": ["JetBrains Mono"],
+                    "display-lg": ["Manrope"],
+                    "headline-lg-mobile": ["Manrope"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                    "waveform-timestamp": ["10px", {"lineHeight": "12px", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "500"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #fbfdfa;
+            color: #191c1b;
+        }
+
+        .glass-card {
+            background: rgba(0, 109, 74, 0.04);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .glass-card:hover {
+            background: rgba(0, 109, 74, 0.08);
+            border-color: rgba(0, 109, 74, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px -8px rgba(0, 109, 74, 0.15);
+        }
+
+        .pattern-bg {
+            background-image: radial-gradient(circle at 2px 2px, rgba(0,0,0,0.03) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+
+        .active-filter {
+            background: linear-gradient(135deg, #006d4a 0%, #10B981 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .custom-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<!-- Top App Bar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-container-padding h-16 bg-surface/90 backdrop-blur-xl border-b border-outline-variant/30 transition-all duration-300 ease-in-out">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant bg-surface-variant flex items-center justify-center">
+<img alt="研究員頭像" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIyIcVdbh1Q4DJwa953MPU66msC4sIb_rsDDQUnq2M5QmhzO1hgmWoMcMfsWtRxllQgL8XqP0BmudVh2y4_n2fig3WV9ZpVbaQe_lVtzWuczpida_E318c2aY_z3tyzOHg8QKRlmSsUg7ionbIYfSTzOESve1Hzml4lVOqteJNE8qfmCHLu0TVrbRTbn9nj5HkK3QME3urpMwy4Dc9zvE7fdFIIfK3Vj0_lk09RV-8A8Xjv2d67-_iePVrYavu9jvTOdnysKiT_6M"/>
+</div>
+<div>
+<h1 class="font-headline-lg-mobile text-[18px] font-bold text-primary leading-tight">文化語料資料庫</h1>
+<p class="text-[10px] text-on-surface-variant font-label-caps uppercase">調查員：林美華</p>
+</div>
+</div>
+<button class="flex items-center gap-2 px-3 py-1.5 rounded-full text-primary hover:bg-primary/10 transition-all">
+<span class="material-symbols-outlined text-[18px]">sync</span>
+<span class="font-label-caps text-[10px] font-bold">立即同步</span>
+</button>
+</header>
+<main class="pt-24 pb-32 px-container-padding max-w-[1200px] mx-auto pattern-bg min-h-screen">
+<!-- Filter Chips Section -->
+<section class="mb-stack-lg overflow-x-auto flex gap-3 custom-scroll pb-2">
+<button class="active-filter px-6 py-2 rounded-full font-label-caps text-label-caps transition-all whitespace-nowrap">全部</button>
+<button class="bg-surface-variant/40 hover:bg-surface-variant/60 border border-outline-variant/20 px-6 py-2 rounded-full font-label-caps text-label-caps text-on-surface-variant transition-all whitespace-nowrap">錄音</button>
+<button class="bg-surface-variant/40 hover:bg-surface-variant/60 border border-outline-variant/20 px-6 py-2 rounded-full font-label-caps text-label-caps text-on-surface-variant transition-all whitespace-nowrap">訪談</button>
+<button class="bg-surface-variant/40 hover:bg-surface-variant/60 border border-outline-variant/20 px-6 py-2 rounded-full font-label-caps text-label-caps text-on-surface-variant transition-all whitespace-nowrap">歌謠</button>
+<button class="bg-surface-variant/40 hover:bg-surface-variant/60 border border-outline-variant/20 px-6 py-2 rounded-full font-label-caps text-label-caps text-on-surface-variant transition-all whitespace-nowrap">詞彙</button>
+</section>
+<!-- Bento Grid Records -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Featured Card: 河之哀歌 -->
+<div class="lg:col-span-2 group relative rounded-lg overflow-hidden glass-card p-container-padding flex flex-col md:flex-row gap-6"><div class="flex-1 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">waves</span>
+<span class="font-label-caps text-label-caps text-secondary uppercase">祭儀歌謠</span>
+</div>
+<div class="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-full font-label-caps text-[10px] shadow-sm">精選</div>
+</div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-2">河之哀歌 (The River's Lament)</h2>
+<p class="text-body-sm font-body-sm text-on-surface-variant line-clamp-3">在冬至期間記錄的珍貴祭祀歌謠。由部落長老演唱，詳述了山谷形成的口傳歷史與自然神靈的連結。</p>
+</div>
+<div class="flex items-center justify-between mt-4 border-t border-outline-variant/30 pt-4">
+<span class="font-waveform-timestamp text-waveform-timestamp text-outline uppercase">2023年10月14日</span>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div></div>
+<!-- Vocabulary Card: 阿美族問候語 -->
+<div class="glass-card p-container-padding flex flex-col justify-between rounded-lg">
+<div>
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">translate</span>
+<span class="font-label-caps text-label-caps text-secondary uppercase">詞彙</span>
+</div>
+</div>
+<h3 class="font-headline-lg-mobile text-[24px] text-on-surface mb-2">阿美族問候語</h3>
+<div class="bg-surface-variant/20 rounded p-3 mb-4">
+<p class="text-body-sm font-body-sm text-on-surface-variant italic">"Nga'ayho" - 你好...</p>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">包含日常社交辭令與不同年齡層之間的稱謂差異分析。</p>
+</div>
+<div class="mt-8 flex items-center justify-between border-t border-outline-variant/30 pt-4">
+<span class="font-waveform-timestamp text-waveform-timestamp text-outline uppercase">12 個條目 • 2023年10月12日</span>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+<!-- Interview Card: 山靈傳說 -->
+<div class="glass-card p-container-padding rounded-lg flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary">record_voice_over</span>
+<span class="font-label-caps text-label-caps text-tertiary uppercase">訪談</span>
+</div>
+</div>
+<h3 class="font-headline-lg-mobile text-[22px] text-on-surface mb-2">山靈傳說</h3>
+<div class="flex items-end gap-1 h-8 mb-4 bg-surface-variant/20 rounded px-2 py-1">
+<div class="w-1 h-3 bg-secondary/40 rounded-full"></div>
+<div class="w-1 h-5 bg-secondary/40 rounded-full"></div>
+<div class="w-1 h-6 bg-secondary rounded-full"></div>
+<div class="w-1 h-4 bg-secondary rounded-full"></div>
+<div class="w-1 h-5 bg-secondary rounded-full"></div>
+<div class="w-1 h-3 bg-secondary/40 rounded-full"></div>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">關於山神棲息地的口述歷史訪談紀錄。</p>
+</div>
+<div class="mt-8 flex items-center justify-between border-t border-outline-variant/30 pt-4">
+<span class="font-waveform-timestamp text-waveform-timestamp text-outline uppercase">2023年10月11日</span>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+<!-- Visual Notes: 建築紋理 -->
+<div class="glass-card p-container-padding rounded-lg flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">photo_library</span>
+<span class="font-label-caps text-label-caps text-secondary uppercase">田野筆記</span>
+</div>
+</div>
+<h3 class="font-body-md font-bold text-on-surface mb-2">建築紋理</h3>
+<div class="h-24 rounded-lg overflow-hidden mb-4">
+<img class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAp7sJbxH29DMnXoIM8TV-w7mUQ8eYmfiDWVYZjzLTQ4KEzF4UqH5-Ix-7m3hoB5tdktV8B7jGvoMHKpwm7JQIHHl-ou1udT-I9OsXhk5RS-bLLGvvjSwmfx2QTyw6Y_KJo9wsdUwhYdBxhD_2J3OVa8-uyCOAvMDzYlp3l2yAopKqBx6PUfLdL90AWjkZQn50rkR5OUrK-8cOwkzuxMqT_fctgWb8MLezgv0bI3RDiuAtxrZNqNLClh8ivNGFSxfKshznHNqazPhE"/>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">傳統建築構造與裝飾符號的影像紀錄。</p>
+</div>
+<div class="mt-8 flex items-center justify-between border-t border-outline-variant/30 pt-4">
+<span class="font-waveform-timestamp text-waveform-timestamp text-outline uppercase">2023年10月09日</span>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+<!-- Additional Record -->
+<div class="glass-card p-container-padding flex flex-col justify-between rounded-lg">
+<div>
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">edit_note</span>
+<span class="font-label-caps text-label-caps text-secondary uppercase">詞彙</span>
+</div>
+</div>
+<h3 class="font-headline-lg-mobile text-[24px] text-on-surface mb-2">水生植物命名</h3>
+<div class="bg-surface-variant/20 rounded p-3 mb-4">
+<p class="text-body-sm font-body-sm text-on-surface-variant italic">"Kolas" - 蘆葦...</p>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">與傳統生計相關的濕地植物方言對照表。</p>
+</div>
+<div class="mt-8 flex items-center justify-between border-t border-outline-variant/30 pt-4">
+<span class="font-waveform-timestamp text-waveform-timestamp text-outline uppercase">24 個詞彙 • 2023年10月08日</span>
+<span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-24 right-container-padding w-16 h-16 rounded-full bg-gradient-to-br from-secondary to-primary shadow-[0_8px_30px_rgba(0,109,74,0.3)] flex items-center justify-center text-white z-40 hover:scale-110 active:scale-95 transition-all duration-300">
+<span class="material-symbols-outlined text-[32px]">add</span>
+</button>
+<!-- Bottom Nav Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-gutter py-4 bg-surface/90 backdrop-blur-2xl border-t border-outline-variant/30 rounded-t-lg shadow-lg">
+<!-- Records (Active) -->
+<a class="flex flex-col items-center justify-center text-secondary relative after:content-[''] after:w-1 after:h-1 after:bg-secondary after:rounded-full after:mt-1 after:shadow-[0_0_8px_rgba(0,109,74,0.5)] transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-label-caps text-label-caps mt-1">語料</span>
+</a>
+<!-- Add -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-label-caps text-label-caps mt-1">新增</span>
+</a>
+<!-- Explore -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="font-label-caps text-label-caps mt-1">探索</span>
+</a>
+<!-- Settings -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-caps text-label-caps mt-1">設定</span>
+</a>
+</nav>
+<script>
+    // Micro-interaction for filter chips
+    const filters = document.querySelectorAll('button[class*="font-label-caps"]');
+    filters.forEach(filter => {
+        filter.addEventListener('click', () => {
+            filters.forEach(f => {
+                f.classList.remove('active-filter');
+                f.classList.add('bg-surface-variant/40', 'text-on-surface-variant');
+                f.classList.remove('text-white');
+            });
+            filter.classList.add('active-filter');
+            filter.classList.remove('bg-surface-variant/40', 'text-on-surface-variant');
+            filter.classList.add('text-white');
+        });
+    });
+
+    // Hover effect for glass cards
+    const cards = document.querySelectorAll('.glass-card');
+    cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = (y - centerY) / 30;
+            const rotateY = (centerX - x) / 30;
+            
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = `perspective(1000</script></body></html>

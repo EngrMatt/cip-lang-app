@@ -1,7 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:uuid/uuid.dart';
 
+import '../../drafts/data/draft_storage.dart';
+import '../../drafts/models/record_draft.dart';
+import '../../drafts/providers/draft_providers.dart';
+import '../../onboarding/models/surveyor_profile.dart';
+import '../../onboarding/providers/surveyor_profile_provider.dart';
 import '../data/record_repository.dart';
 import 'records_providers.dart';
 
@@ -11,6 +18,7 @@ enum UploadPhase { idle, creating, uploadingAudio, uploadingImage, done }
 
 class CreateRecordState {
   const CreateRecordState({
+    this.draftId,
     this.step = CreateRecordStep.form,
     this.title = '',
     this.category = '錄音',
@@ -23,6 +31,7 @@ class CreateRecordState {
     this.uploadError,
   });
 
+  final String? draftId;
   final CreateRecordStep step;
   final String title;
   final String category;
@@ -34,7 +43,14 @@ class CreateRecordState {
   final double? uploadProgress;
   final String? uploadError;
 
+  bool get hasContent =>
+      title.trim().isNotEmpty ||
+      note.trim().isNotEmpty ||
+      audioPath != null ||
+      imagePath != null;
+
   CreateRecordState copyWith({
+    String? draftId,
     CreateRecordStep? step,
     String? title,
     String? category,
@@ -51,6 +67,7 @@ class CreateRecordState {
     bool clearError = false,
   }) {
     return CreateRecordState(
+      draftId: draftId ?? this.draftId,
       step: step ?? this.step,
       title: title ?? this.title,
       category: category ?? this.category,
@@ -80,22 +97,43 @@ final createRecordProvider =
 );
 
 class CreateRecordNotifier extends Notifier<CreateRecordState> {
+  static const _uuid = Uuid();
+
   @override
   CreateRecordState build() => const CreateRecordState();
 
-  void setTitle(String value) => state = state.copyWith(title: value);
-  void setCategory(String value) => state = state.copyWith(category: value);
-  void setNote(String value) => state = state.copyWith(note: value);
-  void setAudioPath(String? path) =>
-      state = state.copyWith(audioPath: path, clearAudio: path == null);
-  void setImagePath(String? path) =>
-      state = state.copyWith(imagePath: path, clearImage: path == null);
+  void setTitle(String value) {
+    state = state.copyWith(title: value);
+    _autoSaveDraft();
+  }
+
+  void setCategory(String value) {
+    state = state.copyWith(category: value);
+    _autoSaveDraft();
+  }
+
+  void setNote(String value) {
+    state = state.copyWith(note: value);
+    _autoSaveDraft();
+  }
+
+  void setAudioPath(String? path) {
+    state = state.copyWith(audioPath: path, clearAudio: path == null);
+    _autoSaveDraft();
+  }
+
+  void setImagePath(String? path) {
+    state = state.copyWith(imagePath: path, clearImage: path == null);
+    _autoSaveDraft();
+  }
 
   bool validateForm() =>
       state.title.trim().isNotEmpty && state.category.isNotEmpty;
 
-  void goToStep(CreateRecordStep step) =>
-      state = state.copyWith(step: step, clearError: true);
+  void goToStep(CreateRecordStep step) {
+    state = state.copyWith(step: step, clearError: true);
+    _autoSaveDraft();
+  }
 
   void nextFromForm() {
     if (!validateForm()) {
@@ -107,6 +145,69 @@ class CreateRecordNotifier extends Notifier<CreateRecordState> {
 
   void nextFromAudio() => goToStep(CreateRecordStep.photo);
   void nextFromPhoto() => goToStep(CreateRecordStep.review);
+
+  Future<void> loadDraft(String id) async {
+    final draft = DraftStorage.get(id);
+    if (draft == null) return;
+
+    state = CreateRecordState(
+      draftId: draft.id,
+      step: CreateRecordStep.values[draft.stepIndex.clamp(0, 3)],
+      title: draft.title,
+      category: draft.category,
+      note: draft.note,
+      audioPath: draft.audioPath,
+      imagePath: draft.imagePath,
+    );
+  }
+
+  Future<void> saveDraft() async {
+    if (!state.hasContent) return;
+
+    final id = state.draftId ?? _uuid.v4();
+    var audioPath = state.audioPath;
+    var imagePath = state.imagePath;
+    final tempDir = await getTemporaryDirectory();
+
+    if (audioPath != null && audioPath.startsWith(tempDir.path)) {
+      audioPath = await DraftStorage.persistMediaFile(audioPath, 'audio');
+    }
+    if (imagePath != null && imagePath.startsWith(tempDir.path)) {
+      imagePath = await DraftStorage.persistMediaFile(imagePath, 'image');
+    }
+
+    final draft = RecordDraft(
+      id: id,
+      title: state.title,
+      category: state.category,
+      note: state.note,
+      audioPath: audioPath,
+      imagePath: imagePath,
+      stepIndex: state.step.index,
+      updatedAt: DateTime.now(),
+    );
+    await DraftStorage.save(draft);
+    state = state.copyWith(
+      draftId: id,
+      audioPath: audioPath ?? state.audioPath,
+      imagePath: imagePath ?? state.imagePath,
+    );
+    refreshDraftsFromRef(ref);
+  }
+
+  Future<void> deleteDraft() async {
+    final id = state.draftId;
+    if (id != null) {
+      await DraftStorage.delete(id);
+      refreshDraftsFromRef(ref);
+    }
+  }
+
+  void _autoSaveDraft() {
+    if (state.hasContent) {
+      Future.microtask(saveDraft);
+    }
+  }
 
   /// 依 docs/api.md：POST /records → POST /upload/audio → POST /upload/image（選填）
   Future<int?> submit() async {
@@ -128,10 +229,16 @@ class CreateRecordNotifier extends Notifier<CreateRecordState> {
     final repo = ref.read(recordRepositoryProvider);
 
     try {
+      final profile = ref.read(surveyorProfileProvider).valueOrNull;
+      final userNote = state.note.trim().isEmpty ? null : state.note.trim();
+      final note = profile != null
+          ? mergeNoteWithSurveyorPrefix(profile: profile, userNote: userNote)
+          : userNote;
+
       final record = await repo.createRecord(
         title: state.title.trim(),
         category: state.category,
-        note: state.note.trim().isEmpty ? null : state.note.trim(),
+        note: note,
       );
 
       state = state.copyWith(uploadPhase: UploadPhase.uploadingAudio);
@@ -161,7 +268,12 @@ class CreateRecordNotifier extends Notifier<CreateRecordState> {
         );
       }
 
+      final draftId = state.draftId;
       state = const CreateRecordState();
+      if (draftId != null) {
+        await DraftStorage.delete(draftId);
+        refreshDraftsFromRef(ref);
+      }
       ref.invalidate(recordsListProvider);
       ref.invalidate(recordDetailProvider(record.id));
       return record.id;

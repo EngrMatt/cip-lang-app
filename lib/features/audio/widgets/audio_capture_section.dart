@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../records/providers/create_record_notifier.dart';
 import '../audio_player_service.dart';
@@ -16,8 +18,10 @@ class AudioCaptureSection extends ConsumerStatefulWidget {
 }
 
 class _AudioCaptureSectionState extends ConsumerState<AudioCaptureSection> {
-  final _recorder = AudioRecorderService();
+  RecorderController? _waveformController;
+  final _fallbackRecorder = AudioRecorderService();
   final _player = AudioPlayerService();
+  bool _useWaveform = true;
   bool _isRecording = false;
   String? _savedPath;
   String? _error;
@@ -25,9 +29,28 @@ class _AudioCaptureSectionState extends ConsumerState<AudioCaptureSection> {
   int _seconds = 0;
 
   @override
+  void initState() {
+    super.initState();
+    _initWaveform();
+  }
+
+  Future<void> _initWaveform() async {
+    try {
+      final controller = RecorderController();
+      await controller.checkPermission();
+      if (mounted) {
+        setState(() => _waveformController = controller);
+      }
+    } catch (_) {
+      if (mounted) setState(() => _useWaveform = false);
+    }
+  }
+
+  @override
   void dispose() {
     _uiTimer?.cancel();
-    _recorder.dispose();
+    _waveformController?.dispose();
+    _fallbackRecorder.dispose();
     _player.dispose();
     super.dispose();
   }
@@ -38,16 +61,44 @@ class _AudioCaptureSectionState extends ConsumerState<AudioCaptureSection> {
     return '$m:$s';
   }
 
+  Future<String> _newRecordingPath() async {
+    final dir = await getTemporaryDirectory();
+    return '${dir.path}/recording_${DateTime.now().millisecondsSinceEpoch}.m4a';
+  }
+
   Future<void> _startRecording() async {
-    setState(() {
-      _error = null;
-    });
+    setState(() => _error = null);
     try {
-      await _recorder.start();
       _uiTimer?.cancel();
+      _seconds = 0;
       _uiTimer = Timer.periodic(const Duration(seconds: 1), (_) {
-        if (mounted) setState(() => _seconds = _recorder.elapsedSeconds);
+        if (mounted) setState(() => _seconds++);
       });
+
+      if (_useWaveform && _waveformController != null) {
+        final path = await _newRecordingPath();
+        await _waveformController!.record(path: path);
+      } else {
+        await _fallbackRecorder.start();
+      }
+
+      setState(() {
+        _isRecording = true;
+        _savedPath = null;
+      });
+    } catch (e) {
+      if (_useWaveform) {
+        setState(() => _useWaveform = false);
+        await _startRecordingFallback();
+      } else {
+        setState(() => _error = e.toString());
+      }
+    }
+  }
+
+  Future<void> _startRecordingFallback() async {
+    try {
+      await _fallbackRecorder.start();
       setState(() {
         _isRecording = true;
         _savedPath = null;
@@ -61,12 +112,20 @@ class _AudioCaptureSectionState extends ConsumerState<AudioCaptureSection> {
   Future<void> _stopRecording() async {
     _uiTimer?.cancel();
     try {
-      final path = await _recorder.stop();
-      ref.read(createRecordProvider.notifier).setAudioPath(path);
+      String? path;
+      if (_useWaveform && _waveformController != null) {
+        path = await _waveformController!.stop();
+      } else {
+        path = await _fallbackRecorder.stop();
+        _seconds = _fallbackRecorder.elapsedSeconds;
+      }
+
+      if (path != null) {
+        ref.read(createRecordProvider.notifier).setAudioPath(path);
+      }
       setState(() {
         _isRecording = false;
         _savedPath = path;
-        _seconds = _recorder.elapsedSeconds;
       });
     } catch (e) {
       setState(() => _error = e.toString());
@@ -74,7 +133,11 @@ class _AudioCaptureSectionState extends ConsumerState<AudioCaptureSection> {
   }
 
   Future<void> _reRecord() async {
-    await _recorder.discard();
+    if (_useWaveform && _waveformController != null) {
+      _waveformController!.reset();
+    } else {
+      await _fallbackRecorder.discard();
+    }
     await _player.stop();
     ref.read(createRecordProvider.notifier).setAudioPath(null);
     setState(() {
@@ -109,24 +172,42 @@ class _AudioCaptureSectionState extends ConsumerState<AudioCaptureSection> {
               ),
             ),
             const SizedBox(height: 24),
-            Center(
-              child: Column(
-                children: [
-                  Icon(
-                    _isRecording ? Icons.mic : Icons.mic_none,
-                    size: 64,
-                    color: _isRecording
-                        ? theme.colorScheme.error
-                        : theme.colorScheme.primary,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    _formatDuration(_seconds),
-                    style: theme.textTheme.headlineMedium?.copyWith(
-                      fontFeatures: const [FontFeature.tabularFigures()],
-                    ),
-                  ),
-                ],
+            SizedBox(
+              height: 100,
+              child: Center(
+                child: _isRecording &&
+                        _useWaveform &&
+                        _waveformController != null
+                    ? AudioWaveforms(
+                        recorderController: _waveformController!,
+                        size: Size(MediaQuery.of(context).size.width - 72, 80),
+                        waveStyle: WaveStyle(
+                          waveColor: theme.colorScheme.error,
+                          extendWaveform: true,
+                          showMiddleLine: false,
+                        ),
+                      )
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            _isRecording ? Icons.mic : Icons.mic_none,
+                            size: 48,
+                            color: _isRecording
+                                ? theme.colorScheme.error
+                                : theme.colorScheme.primary,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            _formatDuration(_seconds),
+                            style: theme.textTheme.headlineSmall?.copyWith(
+                              fontFeatures: const [
+                                FontFeature.tabularFigures(),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
               ),
             ),
             if (_error != null) ...[
