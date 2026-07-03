@@ -184,7 +184,7 @@ class _ListHeader extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  surveyorName != null ? '調查員：$surveyorName' : '田野語料採集',
+                  surveyorName != null ? '調查員：$surveyorName' : '原語錄',
                   style: theme.textTheme.labelSmall?.copyWith(
                     color: AppColors.onSurfaceVariant,
                   ),

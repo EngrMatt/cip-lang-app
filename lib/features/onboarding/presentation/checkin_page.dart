@@ -82,7 +82,7 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
                       ),
                       const SizedBox(height: 20),
                       Text(
-                        '田野語料採集',
+                        '原語錄',
                         style: theme.textTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.w800,
                           fontSize: 26,

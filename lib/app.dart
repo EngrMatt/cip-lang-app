@@ -12,7 +12,7 @@ class CipLangApp extends ConsumerWidget {
     final router = ref.watch(appRouterProvider);
 
     return MaterialApp.router(
-      title: '田野語料',
+      title: '原語錄',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       routerConfig: router,
