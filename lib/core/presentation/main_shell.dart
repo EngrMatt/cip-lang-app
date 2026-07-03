@@ -63,7 +63,7 @@ class MainShell extends StatelessWidget {
                 Expanded(
                   child: _NavItem(
                     icon: Icons.map_outlined,
-                    label: '探索',
+                    label: '地圖',
                     selected: navigationShell.currentIndex == 1,
                     onTap: () => _onTap(1),
                   ),
