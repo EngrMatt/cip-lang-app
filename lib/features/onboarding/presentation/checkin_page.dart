@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/app_brand_logo.dart';
 import '../../../core/widgets/layered_background.dart';
 import '../models/surveyor_profile.dart';
 import '../providers/surveyor_profile_provider.dart';
@@ -74,35 +75,25 @@ class _CheckinPageState extends ConsumerState<CheckinPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      SizedBox(height: constraints.maxHeight * 0.11),
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SizedBox(
-                            width: 72,
-                            height: 72,
-                            child: Icon(
-                              Icons.eco_outlined,
-                              size: 40,
-                              color: AppColors.primary.withValues(alpha: 0.35),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          Text(
-                            '田野語料採集',
-                            style: theme.textTheme.headlineMedium?.copyWith(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 26,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            '調查員簽到後開始採集語料',
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: AppColors.onSurfaceVariant,
-                            ),
-                          ),
-                        ],
+                      SizedBox(height: constraints.maxHeight * 0.07),
+                      AppBrandLogo(
+                        height: 104,
+                        width: constraints.maxWidth,
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        '田野語料採集',
+                        style: theme.textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 26,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '調查員簽到後開始採集語料',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: AppColors.onSurfaceVariant,
+                        ),
                       ),
                       const SizedBox(height: 28),
                       Container(

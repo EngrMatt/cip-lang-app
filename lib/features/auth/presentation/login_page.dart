@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/app_brand_logo.dart';
 import '../../../core/widgets/layered_background.dart';
 import '../../onboarding/providers/surveyor_profile_provider.dart';
 import '../providers/auth_provider.dart';
@@ -52,9 +53,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      SizedBox(height: constraints.maxHeight * 0.11),
-                      _BrandMark(),
-                      const SizedBox(height: 28),
+                      // 上方留白比例：約 0.02～0.06，勿設成 1.0（整屏）會把表單推出畫面外
+                      SizedBox(height: constraints.maxHeight * 0.03),
+                      AppBrandLogo(
+                        height: 104,
+                        width: constraints.maxWidth,
+                      ),
+                      const SizedBox(height: 20),
                       _LoginCard(
                         idController: _idController,
                         passwordController: _passwordController,
@@ -71,7 +76,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           color: AppColors.onSurfaceVariant,
                         ),
                       ),
-                      SizedBox(height: constraints.maxHeight * 0.05),
+                      SizedBox(height: constraints.maxHeight * 0.08),
                     ],
                   ),
                 ),
@@ -79,23 +84,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             },
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _BrandMark extends StatelessWidget {
-  const _BrandMark();
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 72,
-      height: 72,
-      child: Icon(
-        Icons.account_balance_outlined,
-        size: 40,
-        color: AppColors.primary.withValues(alpha: 0.35),
       ),
     );
   }
