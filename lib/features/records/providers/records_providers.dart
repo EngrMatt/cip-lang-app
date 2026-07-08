@@ -67,7 +67,7 @@ class RecordsListNotifier extends AsyncNotifier<RecordListResponse> {
     if (current == null) return;
 
     final filter = ref.read(recordListFilterProvider);
-    final nextPage = current.page + 1;
+    final nextPage = (current.page ?? 1) + 1;
     final next = await _fetchPage(page: nextPage, category: filter.category);
     final merged = RecordListResponse(
       items: [...current.items, ...next.items],

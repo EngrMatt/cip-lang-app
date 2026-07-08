@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:cip_lang_app/app.dart';
 import 'package:cip_lang_app/features/auth/providers/auth_provider.dart';
+import 'package:cip_lang_app/features/onboarding/models/parsed_record_note.dart';
 import 'package:cip_lang_app/features/onboarding/models/surveyor_profile.dart';
 import 'package:cip_lang_app/features/onboarding/providers/surveyor_profile_provider.dart';
 import 'package:cip_lang_app/features/records/providers/records_providers.dart';
@@ -46,6 +47,19 @@ void main() {
       mergeNoteWithSurveyorPrefix(profile: profile),
       '[調查員: 王小明 | 花蓮]',
     );
+  });
+
+  test('ParsedRecordNote parses surveyor prefix', () {
+    final parsed = ParsedRecordNote.parse('[調查員: 陳建名 | 鳳山區] 測試');
+    expect(parsed.surveyorName, '陳建名');
+    expect(parsed.region, '鳳山區');
+    expect(parsed.userNote, '測試');
+  });
+
+  test('ParsedRecordNote falls back to plain note', () {
+    final parsed = ParsedRecordNote.parse('一般備註');
+    expect(parsed.surveyorName, isNull);
+    expect(parsed.userNote, '一般備註');
   });
 }
 

@@ -11,17 +11,33 @@ class AudioPlayerService {
 
   Future<void> prepareUrl(String url) => _player.setUrl(url);
 
+  Future<void> prepareFile(String path) => _player.setFilePath(path);
+
   Future<void> playFile(String path) async {
-    await _player.setFilePath(path);
+    await prepareFile(path);
+    await playFromStart();
+  }
+
+  /// 若已播畢或停在結尾，先 seek 回開頭再播放。
+  Future<void> playFromStart() async {
+    final state = _player.playerState;
+    final duration = _player.duration;
+    final position = _player.position;
+    if (state.processingState == ProcessingState.completed ||
+        (duration != null &&
+            duration > Duration.zero &&
+            position >= duration - const Duration(milliseconds: 200))) {
+      await _player.seek(Duration.zero);
+    }
     await _player.play();
   }
 
   Future<void> playUrl(String url) async {
     await prepareUrl(url);
-    await _player.play();
+    await playFromStart();
   }
 
-  Future<void> play() => _player.play();
+  Future<void> play() => playFromStart();
 
   Future<void> pause() => _player.pause();
   Future<void> stop() => _player.stop();

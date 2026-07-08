@@ -26,7 +26,6 @@
 ### MVP 明確排除（Phase 2）
 
 - 帳號登入與驗證
-- GPS 定位
 - 離線背景同步（Phase 1.5 僅本地草稿）
 - AI 逐字稿 / 摘要
 - 分享與匯出
@@ -41,6 +40,7 @@
 | 錄音/播放波形 | audio_waveforms 即時波形與 seek |
 | 草稿恢復 | Hive 本地草稿、離開提示、列表 banner |
 | 照片裁剪 | image_cropper 拍照後裁剪 |
+| 地圖採集點 | GPS 上傳、`GET /records/map`、marker 與圖卡 |
 
 ## 技術堆疊
 
@@ -53,7 +53,8 @@
 | 錄音 | `record` + `audio_waveforms`（波形 UI） |
 | 播放 | `just_audio` + `audio_waveforms` |
 | 相機 | `image_picker` + `image_cropper` |
-| 本地儲存 | `shared_preferences`（調查員）、`hive`（草稿） |
+| 本地儲存 | `shared_preferences`（調查員、API URL）、`hive`（草稿） |
+| 地圖 | `flutter_map` + OSM、`geolocator` |
 | 媒體儲存 | AWS S3（透過 API 上傳；MVP 可先以 URL 字串對接後端） |
 
 ## 後端 API 整合
@@ -63,11 +64,12 @@ API 規格見 **`docs/api.md`**（預設 `https://cip-lang-test-20260624.nfs.tw`
 | 方法 | 路徑 | 狀態 | 說明 |
 |------|------|------|------|
 | GET | `/records` | ✅ | 語料列表 |
+| GET | `/records/map` | ✅ | 地圖採集點 |
 | GET | `/records/{id}` | ✅ | 語料詳細 |
 | PUT | `/records/{id}` | ✅ | 更新語料 |
-| POST | `/records` | ⏳ | 新增語料（App 上傳用，待後端實作） |
-| POST | `/upload/audio` | ⏳ | 上傳錄音（MVP 規格，待後端實作） |
-| POST | `/upload/image` | ⏳ | 上傳照片（MVP 規格，待後端實作） |
+| POST | `/records` | ✅ | 新增語料（含 GPS） |
+| POST | `/upload/audio` | ✅ | 上傳錄音 |
+| POST | `/upload/image` | ✅ | 上傳照片 |
 
 實機測試請用：`flutter run --dart-define=API_BASE_URL=http://<你的電腦IP>:8280`
 
@@ -81,6 +83,8 @@ API 規格見 **`docs/api.md`**（預設 `https://cip-lang-test-20260624.nfs.tw`
 | `note` | string \| null | — | 備註 |
 | `audio_url` | string \| null | — | 錄音 URL |
 | `image_url` | string \| null | — | 照片 URL |
+| `latitude` | number \| null | — | 緯度（WGS84） |
+| `longitude` | number \| null | — | 經度（WGS84） |
 | `created_at` | datetime | — | 建立時間（ISO 8601 UTC） |
 
 ## 專案結構（規劃）
@@ -98,6 +102,8 @@ cip-lang-app/
 │   │   ├── drafts/              # 本地草稿
 │   │   ├── input/               # 族語符號輸入
 │   │   ├── records/             # 列表、詳細、新增
+│   │   ├── explore/             # 地圖採集點
+│   │   ├── location/            # GPS 定位
 │   │   ├── audio/               # 錄音與播放
 │   │   └── camera/              # 拍照與預覽
 │   ├── models/                  # Record 等資料模型
@@ -157,8 +163,8 @@ cip-lang-app/
 
 ### 平台權限
 
-- iOS / Android 需宣告麥克風、相機、儲存空間權限
-- 錄音與拍照前檢查並引導使用者授權
+- iOS / Android 需宣告麥克風、相機、儲存空間、定位權限
+- 錄音、拍照與 GPS 採集前檢查並引導使用者授權
 
 ## 開發工作流
 

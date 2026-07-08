@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import '../../records/providers/create_record_notifier.dart';
 import '../audio_player_service.dart';
 import '../audio_recorder_service.dart';
+import 'audio_playback_bar.dart';
 
 class AudioCaptureSection extends ConsumerStatefulWidget {
   const AudioCaptureSection({super.key});
@@ -25,6 +26,7 @@ class _AudioCaptureSectionState extends ConsumerState<AudioCaptureSection> {
   bool _useWaveform = true;
   bool _isRecording = false;
   bool _isPreviewPlaying = false;
+  bool _isPreviewReady = false;
   String? _savedPath;
   String? _error;
   Timer? _uiTimer;
@@ -40,6 +42,9 @@ class _AudioCaptureSectionState extends ConsumerState<AudioCaptureSection> {
 
   void _onPlayerState(PlayerState playerState) {
     if (!mounted) return;
+    if (playerState.processingState == ProcessingState.completed) {
+      _player.seek(Duration.zero);
+    }
     final playing = playerState.playing &&
         playerState.processingState != ProcessingState.completed;
     if (_isPreviewPlaying != playing) {
@@ -49,7 +54,7 @@ class _AudioCaptureSectionState extends ConsumerState<AudioCaptureSection> {
 
   Future<void> _initWaveform() async {
     try {
-      final controller = RecorderController();
+      final controller = RecorderController()..sampleRate = 44100;
       await controller.checkPermission();
       if (mounted) {
         setState(() => _waveformController = controller);
@@ -73,6 +78,10 @@ class _AudioCaptureSectionState extends ConsumerState<AudioCaptureSection> {
     final m = (seconds ~/ 60).toString().padLeft(2, '0');
     final s = (seconds % 60).toString().padLeft(2, '0');
     return '$m:$s';
+  }
+
+  String _formatAudioDuration(Duration duration) {
+    return _formatDuration(duration.inSeconds);
   }
 
   Future<String> _newRecordingPath() async {
@@ -99,6 +108,7 @@ class _AudioCaptureSectionState extends ConsumerState<AudioCaptureSection> {
       setState(() {
         _isRecording = true;
         _savedPath = null;
+        _isPreviewReady = false;
       });
     } catch (e) {
       if (_useWaveform) {
@@ -116,10 +126,21 @@ class _AudioCaptureSectionState extends ConsumerState<AudioCaptureSection> {
       setState(() {
         _isRecording = true;
         _savedPath = null;
+        _isPreviewReady = false;
         _seconds = 0;
       });
     } catch (e) {
       setState(() => _error = e.toString());
+    }
+  }
+
+  Future<void> _preparePreview(String path) async {
+    setState(() => _isPreviewReady = false);
+    try {
+      await _player.prepareFile(path);
+      if (mounted) setState(() => _isPreviewReady = true);
+    } catch (e) {
+      if (mounted) setState(() => _error = e.toString());
     }
   }
 
@@ -129,6 +150,7 @@ class _AudioCaptureSectionState extends ConsumerState<AudioCaptureSection> {
       String? path;
       if (_useWaveform && _waveformController != null) {
         path = await _waveformController!.stop();
+        _seconds = _waveformController!.elapsedDuration.inSeconds;
       } else {
         path = await _fallbackRecorder.stop();
         _seconds = _fallbackRecorder.elapsedSeconds;
@@ -136,6 +158,7 @@ class _AudioCaptureSectionState extends ConsumerState<AudioCaptureSection> {
 
       if (path != null) {
         ref.read(createRecordProvider.notifier).setAudioPath(path);
+        await _preparePreview(path);
       }
       setState(() {
         _isRecording = false;
@@ -157,18 +180,23 @@ class _AudioCaptureSectionState extends ConsumerState<AudioCaptureSection> {
     setState(() {
       _isRecording = false;
       _savedPath = null;
+      _isPreviewReady = false;
       _seconds = 0;
       _error = null;
     });
   }
 
-  Future<void> _preview() async {
-    if (_savedPath == null) return;
-    if (_isPreviewPlaying) {
-      await _player.pause();
-      return;
+  Future<void> _togglePreview() async {
+    if (_savedPath == null || !_isPreviewReady) return;
+    try {
+      if (_isPreviewPlaying) {
+        await _player.pause();
+        return;
+      }
+      await _player.playFromStart();
+    } catch (e) {
+      if (mounted) setState(() => _error = e.toString());
     }
-    await _player.playFile(_savedPath!);
   }
 
   @override
@@ -196,14 +224,33 @@ class _AudioCaptureSectionState extends ConsumerState<AudioCaptureSection> {
                 child: _isRecording &&
                         _useWaveform &&
                         _waveformController != null
-                    ? AudioWaveforms(
-                        recorderController: _waveformController!,
-                        size: Size(MediaQuery.of(context).size.width - 72, 80),
-                        waveStyle: WaveStyle(
-                          waveColor: theme.colorScheme.error,
-                          extendWaveform: true,
-                          showMiddleLine: false,
-                        ),
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: AudioWaveforms(
+                              recorderController: _waveformController!,
+                              size: Size(
+                                MediaQuery.of(context).size.width - 72,
+                                60,
+                              ),
+                              waveStyle: WaveStyle(
+                                waveColor: theme.colorScheme.error,
+                                extendWaveform: true,
+                                showMiddleLine: false,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            _formatDuration(_seconds),
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontFeatures: const [
+                                FontFeature.tabularFigures(),
+                              ],
+                              color: theme.colorScheme.error,
+                            ),
+                          ),
+                        ],
                       )
                     : Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -246,26 +293,19 @@ class _AudioCaptureSectionState extends ConsumerState<AudioCaptureSection> {
                 label: const Text('開始錄音'),
               )
             else ...[
-              Row(
-                children: [
-                  Expanded(
-                    child: FilledButton.icon(
-                      onPressed: _preview,
-                      icon: Icon(
-                        _isPreviewPlaying ? Icons.pause : Icons.play_arrow,
-                      ),
-                      label: Text(_isPreviewPlaying ? '暫停預覽' : '預覽錄音'),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: _reRecord,
-                      icon: const Icon(Icons.refresh),
-                      label: const Text('重新錄音'),
-                    ),
-                  ),
-                ],
+              AudioPlaybackBar(
+                player: _player,
+                isPlaying: _isPreviewPlaying,
+                isLoading: !_isPreviewReady,
+                isReady: _isPreviewReady,
+                formatDuration: _formatAudioDuration,
+                onPlayPause: _togglePreview,
+              ),
+              const SizedBox(height: 12),
+              OutlinedButton.icon(
+                onPressed: _reRecord,
+                icon: const Icon(Icons.refresh),
+                label: const Text('重新錄音'),
               ),
             ],
           ],

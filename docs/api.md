@@ -17,10 +17,11 @@
 | `GET /health` | — | 選用 |
 | `GET /records/stats` | ✅ | — |
 | `GET /records` | ✅ | ✅ |
+| `GET /records/map` | — | ✅ |
 | `POST /records` | — | ✅ |
 | `GET /records/{id}` | ✅ | ✅ |
 | `PUT /records/{id}` | ✅ | ✅（上傳後更新 URL） |
-| `DELETE /records/{id}` | ✅ | — |
+| `DELETE /records/{id}` | ✅ | ✅ |
 | `POST /upload/audio` | — | ✅ |
 | `POST /upload/image` | — | ✅ |
 
@@ -76,6 +77,8 @@ FastAPI 標準格式：
 | `note` | string \| null | — | 備註 |
 | `audio_url` | string \| null | — | 錄音公開 URL（S3） |
 | `image_url` | string \| null | — | 照片公開 URL（S3） |
+| `latitude` | number \| null | — | 緯度（WGS84，-90 ~ 90） |
+| `longitude` | number \| null | — | 經度（WGS84，-180 ~ 180） |
 | `created_at` | datetime (ISO 8601) | — | 建立時間（UTC） |
 
 ### 範例
@@ -88,6 +91,8 @@ FastAPI 標準格式：
   "note": "採集於花蓮部落，品質良好",
   "audio_url": "https://your-bucket.s3.ap-northeast-1.amazonaws.com/audio/1/abc123.m4a",
   "image_url": "https://your-bucket.s3.ap-northeast-1.amazonaws.com/images/1/def456.jpg",
+  "latitude": 22.6273,
+  "longitude": 120.3014,
   "created_at": "2026-06-23T07:39:18.422000Z"
 }
 ```
@@ -101,6 +106,7 @@ FastAPI 標準格式：
 | GET | `/health` | 健康檢查 |
 | GET | `/records/stats` | Dashboard 統計 |
 | GET | `/records` | 語料列表（分頁、搜尋、篩選） |
+| GET | `/records/map` | 地圖採集點（僅有座標的紀錄） |
 | POST | `/records` | 新增語料 |
 | GET | `/records/{id}` | 單筆語料詳細 |
 | PUT | `/records/{id}` | 更新語料 |
@@ -209,6 +215,8 @@ GET /records?page=1&page_size=10&search=阿美&category=錄音
 | `title` | string | ✅ | 標題，1–255 字元 |
 | `category` | string | — | 類型，預設 `未分類` |
 | `note` | string \| null | — | 備註 |
+| `latitude` | number \| null | — | 緯度（須與 longitude 同時有值或同時為 null） |
+| `longitude` | number \| null | — | 經度 |
 
 ### 範例請求
 
@@ -219,7 +227,9 @@ Content-Type: application/json
 {
   "title": "阿美語問候語錄音",
   "category": "錄音",
-  "note": "採集於花蓮部落"
+  "note": "採集於花蓮部落",
+  "latitude": 23.9739,
+  "longitude": 121.6015
 }
 ```
 
@@ -233,13 +243,58 @@ Content-Type: application/json
   "note": "採集於花蓮部落",
   "audio_url": null,
   "image_url": null,
+  "latitude": 23.9739,
+  "longitude": 121.6015,
   "created_at": "2026-06-24T08:00:00.000000Z"
 }
 ```
 
 ### 回應 422
 
-`title` 為空或格式錯誤時回傳驗證錯誤。
+`title` 為空或格式錯誤時回傳驗證錯誤。只傳 `latitude` 或只傳 `longitude`、或座標超出合法範圍時亦回傳 422。
+
+---
+
+## GET /records/map
+
+取得**有 GPS 座標**的語料，供地圖 marker 使用。不回傳 `latitude` / `longitude` 為 null 的紀錄。
+
+### Query 參數
+
+| 參數 | 類型 | 預設 | 說明 |
+|------|------|------|------|
+| `bbox` | string | — | 選填。`min_lng,min_lat,max_lng,max_lat`（WGS84） |
+| `category` | string | — | 依類型精確篩選 |
+| `limit` | integer | `500` | 單次回傳上限（建議 100–1000） |
+
+### 範例
+
+```http
+GET /records/map?bbox=121.0,23.0,122.0,24.5&limit=500
+```
+
+### 回應 200
+
+```json
+{
+  "items": [
+    {
+      "id": 8,
+      "title": "排灣語田野筆記",
+      "category": "錄音",
+      "note": "部落入口訪談",
+      "audio_url": "https://your-bucket.s3.amazonaws.com/audio/8/abc.m4a",
+      "image_url": null,
+      "latitude": 22.6273,
+      "longitude": 120.3014,
+      "created_at": "2026-07-03T07:06:21.266947Z"
+    }
+  ],
+  "total": 1
+}
+```
+
+> 與 `GET /records` 不同，此端點不回傳 `page` / `page_size`。
 
 ---
 
@@ -280,6 +335,8 @@ Content-Type: application/json
 | `note` | string \| null | 備註 |
 | `audio_url` | string \| null | 錄音 URL |
 | `image_url` | string \| null | 照片 URL |
+| `latitude` | number \| null | 緯度 |
+| `longitude` | number \| null | 經度 |
 
 ### 範例
 
@@ -305,7 +362,7 @@ Content-Type: application/json
 
 ## DELETE /records/{id}
 
-刪除語料（Web Admin 專用）。
+刪除語料。
 
 ### 回應 204
 

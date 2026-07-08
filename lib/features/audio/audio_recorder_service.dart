@@ -5,6 +5,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
 
+import 'app_record_config.dart';
+
 class AudioRecorderService {
   AudioRecorderService() : _recorder = AudioRecorder();
 
@@ -40,10 +42,7 @@ class AudioRecorderService {
       _elapsedSeconds++;
     });
 
-    await _recorder.start(
-      const RecordConfig(encoder: AudioEncoder.aacLc),
-      path: _currentPath!,
-    );
+    await _recorder.start(appRecordConfig, path: _currentPath!);
   }
 
   Future<String?> stop() async {

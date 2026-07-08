@@ -15,6 +15,27 @@ class RecordRepository {
 
   final Dio _dio;
 
+  /// GET /records/map — 僅有座標的語料（地圖 marker）
+  Future<RecordListResponse> fetchMapRecords({
+    String? bbox,
+    String? category,
+    int limit = 500,
+  }) async {
+    try {
+      final response = await _dio.get<Map<String, dynamic>>(
+        '/records/map',
+        queryParameters: {
+          if (bbox != null && bbox.isNotEmpty) 'bbox': bbox,
+          if (category != null && category.isNotEmpty) 'category': category,
+          'limit': limit,
+        },
+      );
+      return RecordListResponse.fromJson(response.data!);
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
   /// GET /records — docs/api.md
   Future<RecordListResponse> fetchRecords({
     int page = 1,
@@ -53,6 +74,8 @@ class RecordRepository {
     required String title,
     required String category,
     String? note,
+    double? latitude,
+    double? longitude,
   }) async {
     try {
       final response = await _dio.post<Map<String, dynamic>>(
@@ -61,6 +84,10 @@ class RecordRepository {
           'title': title,
           'category': category,
           if (note != null && note.isNotEmpty) 'note': note,
+          if (latitude != null && longitude != null) ...{
+            'latitude': latitude,
+            'longitude': longitude,
+          },
         },
       );
       return Record.fromJson(response.data!);
@@ -116,6 +143,15 @@ class RecordRepository {
         onSendProgress: onProgress,
       );
       return response.data!['image_url'] as String;
+    } on DioException catch (e) {
+      throw mapDioError(e);
+    }
+  }
+
+  /// DELETE /records/{id} → 204
+  Future<void> deleteRecord(int id) async {
+    try {
+      await _dio.delete<void>('/records/$id');
     } on DioException catch (e) {
       throw mapDioError(e);
     }

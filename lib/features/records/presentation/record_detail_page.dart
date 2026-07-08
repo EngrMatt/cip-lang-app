@@ -8,7 +8,11 @@ import 'package:just_audio/just_audio.dart';
 
 import '../../../core/widgets/async_value_widget.dart';
 import '../../audio/audio_player_service.dart';
+import '../../audio/widgets/audio_playback_bar.dart';
+import '../../explore/providers/map_records_provider.dart';
+import '../data/record_repository.dart';
 import '../providers/records_providers.dart';
+import '../widgets/record_note_display.dart';
 
 class RecordDetailPage extends ConsumerStatefulWidget {
   const RecordDetailPage({super.key, required this.recordId});
@@ -27,6 +31,7 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
   String? _audioLoadError;
   String? _preparedUrl;
   StreamSubscription<PlayerState>? _playerSub;
+  bool _isDeleting = false;
 
   @override
   void initState() {
@@ -36,6 +41,9 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
 
   void _onPlayerState(PlayerState playerState) {
     if (!mounted) return;
+    if (playerState.processingState == ProcessingState.completed) {
+      _player.seek(Duration.zero);
+    }
     final playing = playerState.playing &&
         playerState.processingState != ProcessingState.completed;
     if (_isPlaying != playing) {
@@ -90,13 +98,59 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
         await _player.pause();
         return;
       }
-      await _player.play();
+      await _player.playFromStart();
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('播放失敗：$e')),
         );
       }
+    }
+  }
+
+  Future<void> _confirmAndDelete(String title) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('刪除語料'),
+        content: Text('確定要刪除「$title」嗎？此操作無法復原。'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('取消'),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('刪除'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+
+    setState(() => _isDeleting = true);
+    try {
+      await ref.read(recordRepositoryProvider).deleteRecord(widget.recordId);
+      ref.invalidate(recordsListProvider);
+      ref.invalidate(mapRecordsProvider);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('已刪除語料')),
+      );
+      context.pop();
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isDeleting = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            '刪除失敗：${e.toString().replaceFirst('AppException: ', '')}',
+          ),
+        ),
+      );
     }
   }
 
@@ -110,7 +164,29 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
         title: const Text('語料詳細'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),
+          onPressed: _isDeleting ? null : () => context.pop(),
+        ),
+        actions: recordAsync.when(
+          data: (record) => [
+            IconButton(
+              tooltip: '刪除',
+              onPressed: _isDeleting
+                  ? null
+                  : () => _confirmAndDelete(record.title),
+              icon: _isDeleting
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : Icon(
+                      Icons.delete_outline,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+            ),
+          ],
+          loading: () => const <Widget>[],
+          error: (error, stackTrace) => const <Widget>[],
         ),
       ),
       body: AsyncValueWidget(
@@ -148,7 +224,7 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
                         ),
                         if (record.note != null && record.note!.isNotEmpty) ...[
                           const SizedBox(height: 12),
-                          _MetaRow(label: '備註', value: record.note!),
+                          RecordNoteDisplay(note: record.note!),
                         ],
                       ],
                     ),
@@ -164,42 +240,16 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
                         Text('錄音',
                             style: Theme.of(context).textTheme.titleMedium),
                         const SizedBox(height: 12),
-                        if (audioUrl != null) ...[
-                          _RemoteAudioPlayer(
+                        if (audioUrl != null)
+                          AudioPlaybackBar(
+                            player: _player,
                             isPlaying: _isPlaying,
                             isLoading: _isAudioLoading,
                             isReady: _isAudioReady,
                             loadError: _audioLoadError,
-                            player: _player,
                             formatDuration: _formatDuration,
-                          ),
-                          const SizedBox(height: 12),
-                          FilledButton.icon(
-                            onPressed:
-                                _isAudioReady && !_isAudioLoading ? _togglePlay : null,
-                            icon: _isAudioLoading
-                                ? const SizedBox(
-                                    width: 20,
-                                    height: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      color: Colors.white,
-                                    ),
-                                  )
-                                : Icon(
-                                    _isPlaying ? Icons.pause : Icons.play_arrow,
-                                  ),
-                            label: Text(
-                              _isAudioLoading
-                                  ? '載入錄音中…'
-                                  : _audioLoadError != null
-                                      ? '無法載入錄音'
-                                      : _isPlaying
-                                          ? '暫停'
-                                          : '播放錄音',
-                            ),
-                          ),
-                        ] else
+                            onPlayPause: _togglePlay,
+                          ) else
                           Text(
                             '尚無錄音',
                             style: TextStyle(
@@ -282,107 +332,6 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
             ),
           );
         },
-      ),
-    );
-  }
-}
-
-class _RemoteAudioPlayer extends StatelessWidget {
-  const _RemoteAudioPlayer({
-    required this.isPlaying,
-    required this.isLoading,
-    required this.isReady,
-    required this.loadError,
-    required this.player,
-    required this.formatDuration,
-  });
-
-  final bool isPlaying;
-  final bool isLoading;
-  final bool isReady;
-  final String? loadError;
-  final AudioPlayerService player;
-  final String Function(Duration) formatDuration;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        children: [
-          Icon(
-            isLoading
-                ? Icons.hourglass_top
-                : isPlaying
-                    ? Icons.graphic_eq
-                    : Icons.audiotrack,
-            size: 40,
-            color: isReady
-                ? theme.colorScheme.primary
-                : theme.colorScheme.onSurfaceVariant,
-          ),
-          const SizedBox(height: 12),
-          if (loadError != null)
-            Text(
-              loadError!,
-              textAlign: TextAlign.center,
-              style: TextStyle(color: theme.colorScheme.error),
-            )
-          else if (isLoading)
-            Text(
-              '正在下載錄音…',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            )
-          else
-            StreamBuilder<Duration>(
-              stream: player.positionStream,
-              builder: (context, positionSnapshot) {
-                final position = positionSnapshot.data ?? Duration.zero;
-                return StreamBuilder<Duration?>(
-                  stream: player.durationStream,
-                  builder: (context, durationSnapshot) {
-                    final duration = durationSnapshot.data;
-                    final maxMs = duration?.inMilliseconds ?? 1;
-                    final value = duration == null
-                        ? 0.0
-                        : position.inMilliseconds / maxMs;
-
-                    return Column(
-                      children: [
-                        Slider(
-                          value: value.clamp(0.0, 1.0),
-                          onChanged: !isReady || duration == null
-                              ? null
-                              : (v) => player.seek(
-                                    Duration(
-                                      milliseconds: (v * maxMs).round(),
-                                    ),
-                                  ),
-                        ),
-                        Text(
-                          duration == null
-                              ? '—'
-                              : '${formatDuration(position)} / ${formatDuration(duration)}',
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
-                            fontFeatures: const [FontFeature.tabularFigures()],
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-            ),
-        ],
       ),
     );
   }

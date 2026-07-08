@@ -6,6 +6,8 @@ class Record {
     this.note,
     this.audioUrl,
     this.imageUrl,
+    this.latitude,
+    this.longitude,
     required this.createdAt,
   });
 
@@ -15,7 +17,11 @@ class Record {
   final String? note;
   final String? audioUrl;
   final String? imageUrl;
+  final double? latitude;
+  final double? longitude;
   final DateTime createdAt;
+
+  bool get hasLocation => latitude != null && longitude != null;
 
   factory Record.fromJson(Map<String, dynamic> json) {
     return Record(
@@ -25,6 +31,8 @@ class Record {
       note: json['note'] as String?,
       audioUrl: json['audio_url'] as String?,
       imageUrl: json['image_url'] as String?,
+      latitude: (json['latitude'] as num?)?.toDouble(),
+      longitude: (json['longitude'] as num?)?.toDouble(),
       createdAt: DateTime.parse(json['created_at'] as String),
     );
   }
@@ -40,14 +48,14 @@ class RecordListResponse {
   const RecordListResponse({
     required this.items,
     required this.total,
-    required this.page,
-    required this.pageSize,
+    this.page,
+    this.pageSize,
   });
 
   final List<Record> items;
   final int total;
-  final int page;
-  final int pageSize;
+  final int? page;
+  final int? pageSize;
 
   factory RecordListResponse.fromJson(Map<String, dynamic> json) {
     final items = (json['items'] as List<dynamic>)
@@ -56,8 +64,8 @@ class RecordListResponse {
     return RecordListResponse(
       items: items,
       total: json['total'] as int,
-      page: json['page'] as int,
-      pageSize: json['page_size'] as int,
+      page: json['page'] as int?,
+      pageSize: json['page_size'] as int?,
     );
   }
 }

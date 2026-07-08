@@ -49,6 +49,8 @@
 	<string>需要麥克風權限以錄製田野語料</string>
 	<key>NSCameraUsageDescription</key>
 	<string>需要相機權限以拍攝現場照片</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>需要定位權限以記錄採集位置並在地圖上顯示</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsLocalNetworking</key>

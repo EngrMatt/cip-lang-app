@@ -7,6 +7,8 @@ import 'package:uuid/uuid.dart';
 import '../../drafts/data/draft_storage.dart';
 import '../../drafts/models/record_draft.dart';
 import '../../drafts/providers/draft_providers.dart';
+import '../../explore/providers/map_records_provider.dart';
+import '../../location/location_service.dart';
 import '../../onboarding/models/surveyor_profile.dart';
 import '../../onboarding/providers/surveyor_profile_provider.dart';
 import '../data/record_repository.dart';
@@ -227,6 +229,7 @@ class CreateRecordNotifier extends Notifier<CreateRecordState> {
       uploadPhase: UploadPhase.creating,
     );
     final repo = ref.read(recordRepositoryProvider);
+    final locationService = LocationService();
 
     try {
       final profile = ref.read(surveyorProfileProvider).valueOrNull;
@@ -235,10 +238,14 @@ class CreateRecordNotifier extends Notifier<CreateRecordState> {
           ? mergeNoteWithSurveyorPrefix(profile: profile, userNote: userNote)
           : userNote;
 
+      final coords = await locationService.getCurrentPosition();
+
       final record = await repo.createRecord(
         title: state.title.trim(),
         category: state.category,
         note: note,
+        latitude: coords?.latitude,
+        longitude: coords?.longitude,
       );
 
       state = state.copyWith(uploadPhase: UploadPhase.uploadingAudio);
@@ -276,6 +283,7 @@ class CreateRecordNotifier extends Notifier<CreateRecordState> {
       }
       ref.invalidate(recordsListProvider);
       ref.invalidate(recordDetailProvider(record.id));
+      invalidateMapRecords(ref);
       return record.id;
     } catch (e) {
       final message = e.toString().replaceFirst('AppException: ', '');
