@@ -9,6 +9,7 @@ import 'package:just_audio/just_audio.dart';
 import '../../../core/widgets/async_value_widget.dart';
 import '../../audio/audio_player_service.dart';
 import '../../audio/widgets/audio_playback_bar.dart';
+import '../../camera/widgets/record_photo_preview.dart';
 import '../../explore/providers/map_records_provider.dart';
 import '../data/record_repository.dart';
 import '../providers/records_providers.dart';
@@ -273,26 +274,7 @@ class _RecordDetailPageState extends ConsumerState<RecordDetailPage> {
                             style: Theme.of(context).textTheme.titleMedium),
                         const SizedBox(height: 12),
                         if (record.imageUrl != null)
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.network(
-                              record.imageUrl!,
-                              height: 220,
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-                              loadingBuilder: (context, child, progress) {
-                                if (progress == null) return child;
-                                return const SizedBox(
-                                  height: 220,
-                                  child: Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                );
-                              },
-                              errorBuilder: (context, error, stackTrace) =>
-                                  const _MediaPlaceholder(message: '照片載入失敗'),
-                            ),
-                          )
+                          RecordPhotoPreview(imageUrl: record.imageUrl)
                         else
                           const _MediaPlaceholder(message: '尚無照片'),
                       ],

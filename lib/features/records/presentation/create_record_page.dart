@@ -173,7 +173,11 @@ class _CreateRecordPageState extends ConsumerState<CreateRecordPage> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('上傳成功')),
                       );
-                      context.go('/records/$id');
+                      // 先關閉 wizard，再 push 詳情頁，返回鍵才能回到列表
+                      context.pop();
+                      if (context.mounted) {
+                        context.push('/records/$id');
+                      }
                     }
                   },
                 ),

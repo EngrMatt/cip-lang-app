@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../records/providers/create_record_notifier.dart';
 import '../photo_capture_service.dart';
+import 'record_photo_preview.dart';
 
 class PhotoCaptureSection extends ConsumerStatefulWidget {
   const PhotoCaptureSection({super.key});
@@ -62,15 +63,7 @@ class _PhotoCaptureSectionState extends ConsumerState<PhotoCaptureSection> {
             ),
             const SizedBox(height: 20),
             if (_photo != null)
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.file(
-                  _photo!,
-                  height: 200,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-              )
+              RecordPhotoPreview(file: _photo)
             else
               Container(
                 height: 160,
